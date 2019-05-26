@@ -19,7 +19,7 @@ To run the feedhandler program:
 
 ```
 cd MarketDataFeedhandler
-java -jar .\MarketDataFeedhandler.jar 
+java -jar MarketDataFeedhandler.jar 
 
 0 [main] ERROR com.solace.demos.trading.MDFeedhandler  - Common parameters:
          -h HOST[:PORT]  Router IP address [:port, omit for default]
