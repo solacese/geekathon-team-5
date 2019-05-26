@@ -10,7 +10,7 @@ To check out the project, clone this GitHub repository:
 
 ```
 git clone https://github.com/solacese/geekathon-team-5
-cd server-side/
+cd geekathon-team-5/server-side/
 ```
 
 ## Running the Feed Handler
