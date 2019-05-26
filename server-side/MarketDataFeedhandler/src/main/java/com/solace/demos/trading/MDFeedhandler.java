@@ -21,7 +21,6 @@ import com.solacesystems.jcsmp.Topic;
 import com.solacesystems.jcsmp.XMLMessage;
 import com.solacesystems.jcsmp.XMLMessageProducer;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 public class MDFeedhandler {
@@ -33,7 +32,6 @@ public class MDFeedhandler {
 	static
 	{
 		log = Logger.getLogger(MDFeedhandler.class);
-		BasicConfigurator.configure();
 	}
 	
 	public static double FREQUENCY_IN_SECONDS = 10;
