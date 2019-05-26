@@ -1,7 +1,7 @@
 ## Contents
 This directory will contain all the server side code/apps.
 
-1. MarketDataFeedhandler - A Java program to simulate trades updates for a given set of instruments from a specified exchange.
+1. MarketDataFeedhandler - A Java program to simulate trade updates for a given set of instruments from a specified exchange.
 
 
 ## Checking out
@@ -44,4 +44,4 @@ Messages are of the format:
 To an example topic:
 MD/NSE/BHARTIARTL/TRADES
 
-Where it is made up of: "MD/<exchange-name>/<instrument-name>/TRADES
+Where it is made up of: MD/\<exchange-name\>/\<instrument-name\>/TRADES
