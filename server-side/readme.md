@@ -33,7 +33,7 @@ java -jar MarketDataFeedhandler.jar
 
 Example command against a demo Solace Cloud instance:
 ```
-java -jar .\MarketDataFeedhandler.jar -h vmr-mr8v6yiwicdj.messaging.solace.cloud:20512 -v msgvpn-rwtxvklq4sp -u solace-cloud-
+java -jar MarketDataFeedhandler.jar -h vmr-mr8v6yiwicdj.messaging.solace.cloud:20512 -v msgvpn-rwtxvklq4sp -u solace-cloud-
 client -p kasaov362vnboas6r1oi2v85q8 -e nse -i config/instruments.properties
 ```
 ## Topic and Message Example
