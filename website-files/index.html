@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns="">
+<head>
+    <title>Solace Market Data Client</title>
+
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- style -->
+	<link rel="stylesheet"  href="./cssm/jquery.mobile-1.1.0.css" />
+	<link rel="stylesheet"  href="./cssm/styles.css" />
+    <!-- jquery ui -->
+
+	
+
+ 	<script src="./lib/jquery.js"></script>
+	<script src="./lib/jquery.mobile-1.1.0.js"></script>
+	
+    <!-- solclientjs -->
+    <script type="text/javascript" src="./sol/solclient.js"></script>
+
+    <!-- business logic -->
+    <script type="text/javascript" src="./sol/solPubSubHelper.js"></script>
+   <script type="text/javascript" src="./sol/solUIHelper.js"></script>
+   
+	<!--<script type="text/javascript" charset="utf-8" src="cordova-1.9.0.js"></script>-->
+	<script type="text/javascript">
+		$.support.cors = true;
+		$.mobile.allowCrossDomainPages = true;
+		
+		
+		$('#home').live('pagebeforecreate',function(event){
+			connectSession();
+
+		 });    
+
+		$('#sec_top20_vol').live('pagebeforeshow',function(event){
+			addSubscription("MD/>");
+			var strtopic = js_username+"/mdd/sec/mysec/>"
+			//alert("Subs: "+strtopic);
+			addSubscription(strtopic);
+			//addSubscription("mdd/sec/mysec/>");
+			//addSubscription("mdd/sec/top20vol/4");
+
+		 });
+
+		 $('#sec_top20_vol').live('pagebeforehide',function(event){
+			removeSubscription("mdd/sec/top20vol/>");
+
+		 }); 
+		 		  
+		$('#sec_top20_val').live('pagebeforeshow',function(event){
+			addSubscription("mdd/sec/top20val/>");
+
+		 });
+		 $('#sec_top20_val').live('pagebeforeshow',function(event){
+			alert("add:MD/>");
+			addSubscription("MD/>");
+		 });
+		 
+		 $('#sec_top20_val').live('pagebeforehide',function(event){
+			removeSubscription("mdd/sec/top20val/>");
+
+		 }); 
+		 		 
+		$( function() {
+
+		  document.addEventListener("deviceready", onDeviceReady, false);
+		  //document.addEventListener("online", onOnline, false);
+
+		} );
+
+
+		// PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+		//
+		function onDeviceReady() {
+			//alert("on Device ready called");
+			//connectSession();		
+			/*
+			var ajax = new XMLHttpRequest();
+     		ajax.open("GET","http://search.twitter.com/search.json?q=bacon",true);
+     		ajax.send();
+ 
+		     ajax.onreadystatechange=function(){
+        	 	if(ajax.readyState==4 && (ajax.status==200)){
+               		//document.getElementById('main').innerHTML = ajax.responseText;
+               		alert(ajax.responseText);
+          	 	}
+     		}
+     		*/
+     	
+		}
+		function onOnline() {
+			//alert("on Online called");
+			//checkInternetConnection();
+			//connectSession();
+			
+			
+		}
+		
+		function setLoggedInUser(user) {
+			js_username = user
+			//alert("username:"+js_username); 
+			
+		}
+
+
+window.onload = function () {
+	var chart = new CanvasJS.Chart("chartContainer",
+	{
+		theme: "theme4",
+		title:{
+			text: "My Stocks"
+		},
+		data: [
+		{
+			type: "pie",
+			showInLegend: true,
+			toolTipContent: "{y} - #percent %",
+			yValueFormatString: "#0.#,,. Million",
+			legendText: "{indexLabel}",
+			dataPoints: [
+				{  y: 4181563, indexLabel: "Airtel" },
+				{  y: 2175498, indexLabel: "Yes Bank" },
+				{  y: 3125844, indexLabel: "ICICI Bank" },
+				{  y: 1176121, indexLabel: "HDFC Bank"},
+				{  y: 1727161, indexLabel: "Axis Bank" },
+				{  y: 4303364, indexLabel: "TATA Motors"},
+			]
+		}
+		]
+	});
+	chart.render();
+}
+</script>
+	<script src="./sol/canvasjs.min.js"></script>
+	
+</head>
+
+<body >
+
+<div data-role="page" id="home" data-theme="a">
+	<div data-role="header" class="header" data-theme="a">
+		
+		<div id="header_content">
+			
+		</div>
+	</div>
+	
+	<div data-role="content">
+			<div class="block_right_inner">
+			<div> </div>
+			<img id="red" src="img/red-on.png" height="25" width="25">
+			<img id="amber" src="img/amber-off.png" height="25" width="25">
+			<img id="green" src="img/green-off.png" height="25" width="25">
+			<div id="divSvrStatus" style="height:0px; background:#fff; color:#000000">DOWN</div>
+			</div>
+
+		<ul data-role="listview" data-inset="true" data-filter="true">
+			<li><a href="#sec_top20_vol">Portfolio and Account Summary</a></li>
+		</ul>
+	</div>
+	
+</div>
+
+<!--- page:sec_top20_vol ----
+-->
+<div data-role="page" id="sec_top20_vol" data-theme="a" >
+	<div data-role="header" class="header" data-theme="a">
+		
+		<div id="header_content"></div>
+		</div>
+			<div data-role="main" class="ui-content">
+			<div data-role="collapsibleset" >
+			  <div data-role="collapsible" data-collapsed="true">
+				<h3><font colour="red">Buy/Sell Stocks</font></h3>
+					<table cellpadding="4" cellspacing="4" width="60%" align="center" >
+						<tr>
+						<td width="35%"><label for="stksymbol">Symbol <span class="mandatory">*</span></label></td>
+						<td width="35%">
+						<input type="text" name="stksymbol" maxlength="45" value="" id="stksymbol" class="txtbox" onblur="up(this)"/><div id="wwgrp_givenName" class="wwgrp">
+						<div id="wwctrl_symbol" class="wwctrl">
+						</div> </div>
+						</td>
+						</tr>
+						<tr>
+						<td><label for="stkprice">Target Price <span class="mandatory">*</span></label></td>
+						<td colspan="1"><input type="text" name="stkprice" maxlength="45" value="" id="stkprice" class="txtbox" onblur="up(this)"/><div id="wwgrp_surname" class="wwgrp">
+						<div id="wwctrl_price" class="wwctrl">
+						</div> </div>
+						</td>
+						</tr>
+						<tr>
+						<td><label for="volume">Volume <span class="mandatory">*</span></label></td>
+						<td colspan="1">
+						<input type="text" name="volume" maxlength="10" value="" id="volume" class="txtbox"/><div id="wwgrp_birthDate" class="wwgrp">
+						<div id="wwctrl_volume" class="wwctrl">
+						</div> </div>
+						</span>
+						</td>
+						</tr>
+						<tr>
+						<td><label for="volume">Exchnage <span class="mandatory">*</span></label></td>
+						<td colspan="1">
+						<select>
+  							<option value="nse">NSE</option>
+							<option value="bse">BSE</option>
+							<option value="mse">MSE</option>
+						</select>
+						</td>
+						</tr>
+						<tr>
+						<td colspan="1">
+						<div class="buttons">
+						<input type="submit" id="buy" name="buy" value="Buy" class="bt" onclick='sendBuySellStockRq("BUY");'/>
+						</div>
+						</td>
+						<td colspan="1">
+						<div class="buttons">
+						<input type="submit" id="sell" name="sell" value="Sell" class="bt" onclick='sendBuySellStockRq("SELL");'/>
+						</div>
+						</td>
+						</tr>
+					</table>
+			  </div>
+		  </div>
+	  </div>
+
+		<div data-role="main" class="ui-content">
+			<div data-role="collapsibleset" >
+			  <div data-role="collapsible" data-collapsed="false">
+				<h3><font colour="red">Portfolio and Account Summary</font></h3>
+
+
+			<table id="tab_securities1" class="mddTableGrid" width="100%" cellpadding="0">
+				<tbody>
+				<tr>
+				<td width="33%" valign="top">
+					<table id="tab_securities" class="mddTableGrid" width="100%">
+		
+						<tbody>
+						<tr>
+							<th colspan="15">Market Data</th>
+						</tr>
+						<tr>
+							<th rowspan=2>Symbol</th>
+							<th colspan=3>NSE</th>
+							<th colspan=3>BSE</th>
+							<th colspan=3>MSE</th>
+
+						</tr>
+						<tr>
+							<th>Last Trade</th>
+							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>
+							<th>Volume</th>
+							<th>Last Trade</th>
+							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>
+							<th>Volume</th>
+							<th>Last Trade</th>
+							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>
+							<th>Volume</th>
+						</tr>
+							
+						<!-- Here dynamic rows will be created-->
+
+						
+						</tbody>
+					</table>
+				</td>
+				<td width="33%" valign="top">
+					<table id="tab_securities" class="mddTableGrid" width="100%">
+						<tbody>
+						<tr>
+							<th colspan="15">My Portfolio (NSE)</th>
+						</tr>
+						<tr>
+							<th>Symbol</th>
+							<th><img src='img/up.png'/><img src='img/down.png'/></th>
+							<th>Live Price</th>
+							<th>Quantity</th>
+							<th>Inv. Price</th>
+							<th>Gain</th>
+							<th>Gain %	</th>
+							<th>Latest Value</th>
+						</tr>
+						<tr id="mdd_sec_top20vol_1">
+							<td>SBI</td><td>-</td><td>153</td><td>9873</td><td>90.7</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_2" class="altRow">
+							<td>HDFC Bank</td><td>-</td><td>5.3</td><td>67862</td><td>6.4</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>	
+						<tr id="mdd_sec_top20vol_3">
+							<td>ICICI Bank</td><td>-</td><td>15.9</td><td>8908</td><td>6.93</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_4" class="altRow">
+							<td>Axis Bank</td><td>-</td><td>1.5</td><td>3435</td><td>8.35</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_5">
+							<td>Airtel</td><td>-</td><td>153</td><td>3445</td><td>289</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_6" class="altRow">
+							<td>Tata Motors</td><td>-</td><td>53.7</td><td>34535</td><td>75</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>	
+						<tr id="mdd_sec_top20vol_7">
+							<td>ONGC</td><td>-</td><td>189</td><td>8488</td><td>80</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_8" class="altRow">
+							<td>Infosys</td><td>-</td><td>53</td><td>87664</td><td>54.2</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>	
+						<tr id="mdd_sec_top20vol_9">
+							<td>TCS</td><td>-</td><td>73</td><td>7777</td><td>76.9</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_10" class="altRow">
+							<td>Noble Grp</td><td>-</td><td>105</td><td>87979</td><td>99.3</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>
+						<tr id="mdd_sec_top20vol_11">
+							<td>Yangzijiang</td><td>-</td><td>8.9</td><td>909809</td><td>9.4</td><td>0.158</td><td>0.142</td><td>11422,705</td>
+						</tr>																	
+						</tbody>
+					</table>
+				</td>
+				<td width="34%"  valign="top">
+					<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+				</td>
+				</tr>
+				</tbody>
+			</table>
+
+			</div>
+		</div>
+		
+	</div>
+
+</div>
+
+
+</body>
+
+</html>
+
+<script>
+//when this page loads, connect to Solace. 
+initSolace();
+</script>
+
+
