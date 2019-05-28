@@ -110,7 +110,7 @@ window.onload = function () {
 	{
 		theme: "theme4",
 		title:{
-			text: "My Stocks"
+			text: "Bank Trade Volume"
 		},
 		data: [
 		{
@@ -120,17 +120,45 @@ window.onload = function () {
 			yValueFormatString: "#0.#,,. Million",
 			legendText: "{indexLabel}",
 			dataPoints: [
-				{  y: 4181563, indexLabel: "Airtel" },
-				{  y: 2175498, indexLabel: "Yes Bank" },
-				{  y: 3125844, indexLabel: "ICICI Bank" },
-				{  y: 1176121, indexLabel: "HDFC Bank"},
-				{  y: 1727161, indexLabel: "Axis Bank" },
-				{  y: 4303364, indexLabel: "TATA Motors"},
+				{  y: 4181563, indexLabel: "KOTAKBANK" },
+				{  y: 2175498, indexLabel: "YESBANK" },
+				{  y: 3125844, indexLabel: "ICICIBANK" },
+				{  y: 1176121, indexLabel: "HDFC"},
+				{  y: 1727161, indexLabel: "AXISBANK" },
+				{  y: 4303364, indexLabel: "SBIN"},
 			]
 		}
 		]
 	});
 	chart.render();
+
+
+	var chart1 = new CanvasJS.Chart("chartContainer1",
+	{
+		theme: "theme4",
+		title:{
+			text: "Auto Trade Volume"
+		},
+		data: [
+		{
+			type: "pie",
+			showInLegend: true,
+			toolTipContent: "{y} - #percent %",
+			yValueFormatString: "#0.#,,. Million",
+			legendText: "{indexLabel}",
+			dataPoints: [
+				{  y: 2175498, indexLabel: "TATAMOTORS" },
+				{  y: 3125844, indexLabel: "BAJAJ-AUTO" },
+				{  y: 1176121, indexLabel: "M&M"},
+				{  y: 1727161, indexLabel: "EICHERMOT" },
+				{  y: 4303364, indexLabel: "MARUTI"},
+			]
+		}
+		]
+	});
+	chart1.render();
+	
+
 }
 </script>
 	<script src="./sol/canvasjs.min.js"></script>
@@ -235,7 +263,7 @@ window.onload = function () {
 			<table id="tab_securities1" class="mddTableGrid" width="100%" cellpadding="0">
 				<tbody>
 				<tr>
-				<td width="33%" valign="top">
+				<td width="35%" valign="top">
 					<table id="tab_securities" class="mddTableGrid" width="100%">
 		
 						<tbody>
@@ -267,7 +295,7 @@ window.onload = function () {
 						</tbody>
 					</table>
 				</td>
-				<td width="33%" valign="top">
+				<td width="35%" valign="top">
 					<table id="tab_securities" class="mddTableGrid" width="100%">
 						<tbody>
 						<tr>
@@ -319,8 +347,10 @@ window.onload = function () {
 						</tbody>
 					</table>
 				</td>
-				<td width="34%"  valign="top">
-					<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+				<td width="30%"  valign="top" >
+					<div id="chartContainer" style="height: 300px; width: 100%;" style="border:thin"></div>
+					<div style="height: 10px; width: 100%;" style="border:thin"> </div>
+					<div id="chartContainer1" style="height: 300px; width: 100%;" style="border:thin"></div>
 				</td>
 				</tr>
 				</tbody>
