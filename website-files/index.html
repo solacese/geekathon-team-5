@@ -101,9 +101,8 @@
 		function setLoggedInUser(user) {
 			js_username = user
 			//alert("username:"+js_username); 
-			
+			sendPortfolioRq();
 		}
-
 
 window.onload = function () {
 	var chart = new CanvasJS.Chart("chartContainer",
@@ -170,20 +169,52 @@ window.onload = function () {
 <div data-role="page" id="home" data-theme="a">
 	<div data-role="header" class="header" data-theme="a">
 		
-		<div id="header_content">
-			
+		<div id="header_image">
+			<!-- User specific header code will come here-->
+			<img src='cssm/images/newsolace_sol.png' alt='Exchnage Logo' height='100%' width='100%'>
+
 		</div>
 	</div>
 	
-	<div data-role="content">
+		<div data-role="content">
 			<div class="block_right_inner">
 			<div> </div>
 			<img id="red" src="img/red-on.png" height="25" width="25">
 			<img id="amber" src="img/amber-off.png" height="25" width="25">
 			<img id="green" src="img/green-off.png" height="25" width="25">
-			<div id="divSvrStatus" style="height:0px; background:#fff; color:#000000">DOWN</div>
-			</div>
+			<div id="divSvrStatus" style="height:0px; background:#fff; color:#000000"> </div>
+		</div>
+			
+		<div data-role="main" class="ui-content">
+			<div data-role="collapsibleset" >
+			  <div data-role="collapsible" data-collapsed="false">
+				<h3>User Login</h3>
+					<table cellpadding="2" cellspacing="0" width="40%" align="center">
+						<tr>
+						<td width="10%"><label for="userName">Username</label></td>
+						<td width="10%">
+						<input type="text" name="username" maxlength="45" value="" id="username" class="txtbox" />
+						<span class="errorMessage"></span>
+						</td>
+						</tr>
+						<tr>
+						<td><label for="password">Password</label></td>
+						<td colspan="1"><input type="password" name="password" maxlength="45" value="" id="password" class="txtbox" />
+						</td>
+						</tr>
+						<tr>
+						<td colspan="2">
+						<div class="buttons">
+						<input type="submit" id="save" name="login" value="Login" class="bt" onclick="sendLoginRq();"/>
+						</div>
+						</td>
+						</tr>
+					</table>
+			  </div>
+		  </div>
+	  </div>
 
+		<br>
 		<ul data-role="listview" data-inset="true" data-filter="true">
 			<li><a href="#sec_top20_vol">Portfolio and Account Summary</a></li>
 		</ul>
@@ -191,12 +222,11 @@ window.onload = function () {
 	
 </div>
 
-<!--- page:sec_top20_vol ----
--->
+<!--- page:sec_top20_vol -->
 <div data-role="page" id="sec_top20_vol" data-theme="a" >
 	<div data-role="header" class="header" data-theme="a">
 		
-		<div id="header_content"></div>
+		<div id="header_conten"><img src='cssm/images/newsolace_nse.png' alt='Exchnage Logo' height='100%' width='100%'></div>
 		</div>
 			<div data-role="main" class="ui-content">
 			<div data-role="collapsibleset" >
