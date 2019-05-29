@@ -115,7 +115,7 @@ window.onload = function () {
 		{
 			type: "pie",
 			showInLegend: true,
-			toolTipContent: "{y}",
+			toolTipContent: "{y} - #percent %",
 			yValueFormatString: "#0.#,,. Million",
 			legendText: "{indexLabel}",
 			dataPoints: [
@@ -226,7 +226,7 @@ window.onload = function () {
 <div data-role="page" id="sec_top20_vol" data-theme="a" >
 	<div data-role="header" class="header" data-theme="a">
 		
-		<div id="header_conten"><img src='cssm/images/newsolace_nse.png' alt='Exchnage Logo' height='100%' width='100%'></div>
+		<div id="header_conten"><img src='cssm/images/newsolace_sol.png' alt='Exchnage Logo' height='100%' width='100%' id='exchange-banner'></div>
 		</div>
 			<div data-role="main" class="ui-content">
 			<div data-role="collapsibleset" >
@@ -258,7 +258,7 @@ window.onload = function () {
 						</td>
 						</tr>
 						<tr>
-						<td><label for="volume">Exchnage <span class="mandatory">*</span></label></td>
+						<td><label for="volume">Exchange <span class="mandatory">*</span></label></td>
 						<td colspan="1">
 						<select>
   							<option value="nse">NSE</option>
@@ -326,54 +326,28 @@ window.onload = function () {
 					</table>
 				</td>
 				<td width="35%" valign="top">
-					<table id="tab_securities" class="mddTableGrid" width="100%">
+					<table id="tab_portfolio" class="mddTableGrid" width="100%">
 						<tbody>
 						<tr>
 							<th colspan="15">My Portfolio (NSE)</th>
 						</tr>
 						<tr>
 							<th>Symbol</th>
-							<th><img src='img/up.png'/><img src='img/down.png'/></th>
-							<th>Live Price</th>
-							<th>Quantity</th>
 							<th>Inv. Price</th>
+							<th>Quantity</th>
+							<!--<th><img src='img/up.png'/><img src='img/down.png'/></th>
+							<th>Live Price</th>
 							<th>Gain</th>
-							<th>Gain %	</th>
+							<th>Gain %	</th>-->
 							<th>Latest Value</th>
 						</tr>
-						<tr id="mdd_sec_top20vol_1">
-							<td>SBI</td><td>-</td><td>153</td><td>9873</td><td>90.7</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_2" class="altRow">
-							<td>HDFC Bank</td><td>-</td><td>5.3</td><td>67862</td><td>6.4</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>	
-						<tr id="mdd_sec_top20vol_3">
-							<td>ICICI Bank</td><td>-</td><td>15.9</td><td>8908</td><td>6.93</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_4" class="altRow">
-							<td>Axis Bank</td><td>-</td><td>1.5</td><td>3435</td><td>8.35</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_5">
-							<td>Airtel</td><td>-</td><td>153</td><td>3445</td><td>289</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_6" class="altRow">
-							<td>Tata Motors</td><td>-</td><td>53.7</td><td>34535</td><td>75</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>	
-						<tr id="mdd_sec_top20vol_7">
-							<td>ONGC</td><td>-</td><td>189</td><td>8488</td><td>80</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_8" class="altRow">
-							<td>Infosys</td><td>-</td><td>53</td><td>87664</td><td>54.2</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>	
-						<tr id="mdd_sec_top20vol_9">
-							<td>TCS</td><td>-</td><td>73</td><td>7777</td><td>76.9</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_10" class="altRow">
-							<td>Noble Grp</td><td>-</td><td>105</td><td>87979</td><td>99.3</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>
-						<tr id="mdd_sec_top20vol_11">
-							<td>Yangzijiang</td><td>-</td><td>8.9</td><td>909809</td><td>9.4</td><td>0.158</td><td>0.142</td><td>11422,705</td>
-						</tr>																	
+						
+						
+						
+						<!-- Here dynamic rows will be created-->
+						
+						
+																			
 						</tbody>
 					</table>
 				</td>
