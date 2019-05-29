@@ -28,10 +28,17 @@
     * http://192.168.0.12:8080/smf
     */
     
+    // Un-comment for demo - Solace Cloud connection
     var my_web_server_url = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
     var my_client_username = "solace-cloud-client";
     var my_vpn = "msgvpn-rwtxvklq4sp";
     var my_password = "kasaov362vnboas6r1oi2v85q8";     
+
+	//Comment for demo - local connection (Amit)
+//     var my_web_server_url = "http://127.0.0.1/smf"; //e.g. change this to F5 ip
+//     var my_client_username = "demouser";
+//     var my_vpn = "DemoVPN";
+//     var my_password = "demouser";     
 
  	/**
  	* Global variables which control the session (tcp connection)
@@ -44,7 +51,7 @@
     var autoReconnect = true;
     var previousTick = 0;
     var mySession = null;
-    var symbols = {YES: '100',HDFC:'200',ICICI:'300',AXIS: '100',Airtel:'200',TATA:'300'};
+    var symbols = {YES:'100',HDFC:'200',ICICI:'300',AXIS:'100',KOTAK:'200',SBI:'300',TATA:'300',MARUTI:'100',MAHIN:'200',EICHER:'300',BAJAJAUTO:'100'};
 
 //    var autoReconnect = false;
 //    var mySession = null;
@@ -273,6 +280,9 @@
 		//alert("test1"+topic_string_1);
     	this.paintData (topic_string, payload);
     	} else {
+		
+		//My Portfolio logic will be here
+		
 		//alert("test2"+topic_string_1);
 		//this.paintDataMySec (topic_string, payload);	
 
@@ -307,20 +317,32 @@
         	//alert("intChange : "+intChange);
         	
         			
-         	symbols[tick.CounterName] = tick.TotalValue;
-         	//alert(tick.CounterName);
-         	if(tick.CounterName == "Yes Bank"){
-         		symbols.YES = tick.Value;
-         	}else if(tick.CounterName == "HDFC Bank"){
-         		symbols.HDFC = tick.Value;
-         	}else if(tick.CounterName == "ICICI Bank"){
-         		symbols.ICICI= tick.Value;
-         	}else if(tick.CounterName == "Axis Bank"){
-         		symbols.AXIS = tick.Value;
-         	}else if(tick.CounterName == "Airtel"){
-         		symbols.Airtel = tick.Value;
-         	}else if(tick.CounterName == "Tata Motors"){
-         		symbols.TATA = tick.Value;
+         	symbols[tick.Sec] = tick.TotalValue;
+         	var grfQty = tick.Qty
+         	var grfQty = grfQty.replace(/\./g,'').replace(',','');
+         	//alert(tick.Qty +" : "+ grfQty);
+         	if(tick.Sec == "YESBANK"){
+         		symbols.YES = grfQty;
+         	}else if(tick.Sec == "HDFC"){
+         		symbols.HDFC = grfQty;
+         	}else if(tick.Sec == "ICICIBANK"){
+         		symbols.ICICI= grfQty;
+         	}else if(tick.Sec == "AXISBANK"){
+         		symbols.AXIS = grfQty;
+         	}else if(tick.Sec == "KOTAKBANK"){
+         		symbols.KOTAK = grfQty;
+         	}else if(tick.Sec == "SBIN"){
+         		symbols.SBI = grfQty;
+         	}else if(tick.Sec == "TATAMOTORS"){
+         		symbols.TATA = grfQty;
+         	}else if(tick.Sec == "BAJAJ-AUTO"){
+         		symbols.BAJAJAUTO = grfQty;
+         	}else if(tick.Sec == "M&M"){
+         		symbols.MAHIN = grfQty;
+         	}else if(tick.Sec == "EICHERMOT"){
+         		symbols.EICHER = grfQty;
+          	}else if(tick.Sec == "MARUTI"){
+         		symbols.MARUTI = grfQty;
          	}
          	
          	//alert(symbols.YES + symbols.HDFC + symbols.ICICI + symbols.AXIS + symbols.Airtel + symbols.TATA);
@@ -356,6 +378,8 @@
  
  					// Add Symbol Label
  					var symbolCell = row.insertCell(0);
+ 					symbolCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+ 					symbolCell.style.color = '#FFFFFF';
  					symbolCell.innerHTML = tick.Sec;
  					symbolCell.id = tr_id+"_SEC";
  					symbolCell.classList.add("symbol");
@@ -366,16 +390,22 @@
 	
 					//Price
 					  var priceCell = row.insertCell(-1);
+ 					priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+ 					priceCell.style.color = '#FFFFFF';
 					  priceCell.innerHTML = tick.Price;
 					  priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
 					  priceCell.classList.add("price");
 					//Change
 					  var chgCell = row.insertCell(-1);
+					chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+					chgCell.style.color = '#FFFFFF';
 					  chgCell.innerHTML = arrow;
 					  chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
 					  chgCell.classList.add("arrow");
  					//Volume
 					  var volumeCell = row.insertCell(-1);
+					volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+					volumeCell.style.color = '#FFFFFF';
 					  volumeCell.innerHTML = tick.Qty;
 					  volumeCell.id = tr_id+"_"+exchanges[i]+"_QTY";
 					  volumeCell.classList.add("volume");
@@ -402,13 +432,13 @@
 
     this.paintGraph = function (symbols) {
 
-//alert(symbols.YES + symbols.HDFC + symbols.ICICI + symbols.AXIS + symbols.Airtel + symbols.TATA);
+	//alert("YES:"+symbols.YES+ " HDFC:"+symbols.HDFC + " ICICI:"+symbols.ICICI + " AXIS:"+symbols.AXIS + " Airtel:"+symbols.Airtel + " TATA:"+symbols.TATA);
 
 		var chart = new CanvasJS.Chart("chartContainer",
 		{
 			theme: "theme4",
 			title:{
-				text: "My Stocks"
+				text: "Bank Trade Volume"
 			},
 			data: [
 			{
@@ -418,24 +448,24 @@
 				yValueFormatString: "#0.#,,. Million",
 				legendText: "{indexLabel}",
 				dataPoints: [
-					{  y: symbols.Airtel, indexLabel: "Airtel" },
-					{  y: symbols.YES, indexLabel: "Yes Bank" },
-					{  y: symbols.ICICI, indexLabel: "ICICI Bank" },
-					{  y: symbols.HDFC, indexLabel: "HDFC Bank" },
-					{  y: symbols.AXIS, indexLabel: "Axis Bank"},
-					{  y: symbols.TATA, indexLabel: "Tata Motors"}
+					{  y: symbols.KOTAK, indexLabel: "KOTAKBANK" },
+					{  y: symbols.YES, indexLabel: "YESBANK" },
+					{  y: symbols.ICICI, indexLabel: "ICICIBANK" },
+					{  y: symbols.HDFC, indexLabel: "HDFC" },
+					{  y: symbols.AXIS, indexLabel: "AXISBANK"},
+					{  y: symbols.SBI, indexLabel: "SBIN"}
 				]
 			}
 			]
 		});
 		chart.render();
 
-/*
+
 		var chart1 = new CanvasJS.Chart("chartContainer1",
 		{
 			theme: "theme4",
 			title:{
-				text: "Pie Chart"
+				text: "Auto Trade Volume"
 			},
 			data: [
 			{
@@ -446,12 +476,11 @@
 					showInLegend: true,
 
 				dataPoints: [
-					{  y: symbols.Airtel, indexLabel: "Airtel" },
-					{  y: symbols.YES, indexLabel: "Yes Bank" },
-					{  y: symbols.ICICI, indexLabel: "ICICI Bank" },
-					{  y: symbols.HDFC, indexLabel: "HDFC Bank" },
-					{  y: symbols.AXIS, indexLabel: "Axis Bank"},
-					{  y: symbols.TATA, indexLabel: "Tata Motors"}
+					{  y: symbols.TATA, indexLabel: "TATAMOTORS" },
+					{  y: symbols.BAJAJAUTO, indexLabel: "BAJAJ-AUTO" },
+					{  y: symbols.MAHIN, indexLabel: "M&M" },
+					{  y: symbols.EICHER, indexLabel: "EICHERMOT" },
+					{  y: symbols.MARUTI, indexLabel: "MARUTI"},
 				]
 			}
 			]
@@ -459,8 +488,9 @@
 		chart1.render();
 
 
+/*
 		
-			var chart1 = new CanvasJS.Chart("chartContainer1", {
+		var chart2 = new CanvasJS.Chart("chartContainer2", {
 				theme: "theme4" ,
 				title: {
 					text: "Column Chart"
@@ -473,21 +503,20 @@
 					type: "column",
 					indexLabelLineThickness: 2,
 					dataPoints: [
-						  { x: 1, y: 10000000, indexLabel: "Yes Bank" },
-						  { x: 2, y: 87687600, indexLabel: "HDFC Bank" },
-						  { x: 3, y: 09089900, indexLabel: "ICICI Bank" },
-						  { x: 4, y: 43242400, indexLabel: "Axis Bank" },
-						  { x: 5, y: 05664600, indexLabel: "Airtel" },
+						  { x: 1, y: symbols.YES, indexLabel: "Yes Bank" },
+						  { x: 2, y: symbols.HDFC, indexLabel: "HDFC Bank" },
+						  { x: 3, y: symbols.ICICI, indexLabel: "ICICI Bank" },
+						  { x: 4, y: symbols.AXIS, indexLabel: "Axis Bank" },
 						  { x: 6, y: symbols.TATA, indexLabel: "Tata Motors" }
 					]
 				}]
 			});
-			chart1.render();
+			chart2.render();
 			
-*/
 
-/*	
-				var chart = new CanvasJS.Chart("chartContainer1", {
+
+	
+				var chart2 = new CanvasJS.Chart("chartContainer2", {
 				title: {
 					text: "Column Chart with Index Label and Data Point Width"
 				},
@@ -503,8 +532,7 @@
 						  { x: 20, y: symbols.HDFC, indexLabel: "HDFC Bank" },
 						  { x: 30, y: symbols.ICICI, indexLabel: "ICICI Bank" },
 						  { x: 40, y: symbols.AXIS, indexLabel: "Axis Bank" },
-						  { x: 50, y: symbols.Airtel, indexLabel: "Airtel" },
-						  { x: 60, y: symbols.TATA, indexLabel: "Tata Motors" }
+						  { x: 50, y: symbols.TATA, indexLabel: "Tata Motors" }
 						
 					]
 				}]
