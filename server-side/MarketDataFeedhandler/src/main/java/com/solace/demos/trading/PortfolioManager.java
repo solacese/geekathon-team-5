@@ -139,11 +139,12 @@ public class PortfolioManager {
 			
 			// Everything is up and running...
 	        log.info("Ready. Press enter to exit.");
-	        try {
-	            System.in.read();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+	        //System.in.read();
+			try {
+				sleep(Long.MAX_VALUE);
+			} catch (InterruptedException e) {
+				log.error(e.getMessage());
+			}
 
 		}
 		
