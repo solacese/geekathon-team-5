@@ -29,16 +29,16 @@
     */
     
     // Un-comment for demo - Solace Cloud connection
-    var my_web_server_url = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
-    var my_client_username = "solace-cloud-client";
-    var my_vpn = "msgvpn-rwtxvklq4sp";
-    var my_password = "kasaov362vnboas6r1oi2v85q8";     
+//     var my_web_server_url = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
+//     var my_client_username = "solace-cloud-client";
+//     var my_vpn = "msgvpn-rwtxvklq4sp";
+//     var my_password = "kasaov362vnboas6r1oi2v85q8";     
 
 	//Comment for demo - local connection (Amit)
-//     var my_web_server_url = "http://127.0.0.1/smf"; //e.g. change this to F5 ip
-//     var my_client_username = "demouser";
-//     var my_vpn = "DemoVPN";
-//     var my_password = "demouser";     
+    var my_web_server_url = "http://127.0.0.1/smf"; //e.g. change this to F5 ip
+    var my_client_username = "demouser";
+    var my_vpn = "DemoVPN";
+    var my_password = "demouser";     
 
  	/**
  	* Global variables which control the session (tcp connection)
@@ -297,11 +297,9 @@
     this.paintData = function (topic_string, payload) {
 
     	try { 
-        	
+        	//alert("payload : "+payload);
         	objJSON = $.parseJSON(payload);
-        	//var tr_id = 123;
         	var tr_id = topic_string.replace(/\//g, '_');
-        	//alert("222"+tr_id)
         	var td_id = topic_string.replace(/\//g, '_');
 			var str1 = tr_id.substring(0, 3);
 			var str2 = tr_id.substring(7);
@@ -310,116 +308,108 @@
 			
 			var tr_id = str1+str2
         	//alert(strEx);
-
         	
-        	$.each(objJSON, function(index, tick) {
-        	var intChange = tick.Chg;
-        	//alert("intChange : "+intChange);
-        	
-        			
-         	symbols[tick.Sec] = tick.TotalValue;
-         	var grfQty = tick.Qty
-         	var grfQty = grfQty.replace(/\./g,'').replace(',','');
-         	//alert(tick.Qty +" : "+ grfQty);
-         	if(tick.Sec == "YESBANK"){
-         		symbols.YES = grfQty;
-         	}else if(tick.Sec == "HDFC"){
-         		symbols.HDFC = grfQty;
-         	}else if(tick.Sec == "ICICIBANK"){
-         		symbols.ICICI= grfQty;
-         	}else if(tick.Sec == "AXISBANK"){
-         		symbols.AXIS = grfQty;
-         	}else if(tick.Sec == "KOTAKBANK"){
-         		symbols.KOTAK = grfQty;
-         	}else if(tick.Sec == "SBIN"){
-         		symbols.SBI = grfQty;
-         	}else if(tick.Sec == "TATAMOTORS"){
-         		symbols.TATA = grfQty;
-         	}else if(tick.Sec == "BAJAJ-AUTO"){
-         		symbols.BAJAJAUTO = grfQty;
-         	}else if(tick.Sec == "M&M"){
-         		symbols.MAHIN = grfQty;
-         	}else if(tick.Sec == "EICHERMOT"){
-         		symbols.EICHER = grfQty;
-          	}else if(tick.Sec == "MARUTI"){
-         		symbols.MARUTI = grfQty;
-         	}
-         	
-         	//alert(symbols.YES + symbols.HDFC + symbols.ICICI + symbols.AXIS + symbols.Airtel + symbols.TATA);
-       	
-        		if(intChange == "+") {
-        			altRow = "background-image: -webkit-linear-gradient(top, #00360C 0%, #010133 100%)";
+			$.each(objJSON, function(index, tick) {
+			
+				var intChange = tick.Chg;
+				//alert("intChange : "+intChange);
+			
+				symbols[tick.Sec] = tick.TotalValue;
+				var grfQty = tick.Qty
+				var grfQty = grfQty.replace(/\./g,'').replace(',','');
+				//alert(tick.Qty +" : "+ grfQty);
+				if(tick.Sec == "YESBANK"){
+					symbols.YES = grfQty;
+				}else if(tick.Sec == "HDFC"){
+					symbols.HDFC = grfQty;
+				}else if(tick.Sec == "ICICIBANK"){
+					symbols.ICICI= grfQty;
+				}else if(tick.Sec == "AXISBANK"){
+					symbols.AXIS = grfQty;
+				}else if(tick.Sec == "KOTAKBANK"){
+					symbols.KOTAK = grfQty;
+				}else if(tick.Sec == "SBIN"){
+					symbols.SBI = grfQty;
+				}else if(tick.Sec == "TATAMOTORS"){
+					symbols.TATA = grfQty;
+				}else if(tick.Sec == "BAJAJ-AUTO"){
+					symbols.BAJAJAUTO = grfQty;
+				}else if(tick.Sec == "M&M"){
+					symbols.MAHIN = grfQty;
+				}else if(tick.Sec == "EICHERMOT"){
+					symbols.EICHER = grfQty;
+				}else if(tick.Sec == "MARUTI"){
+					symbols.MARUTI = grfQty;
+				}
+		
+				if(intChange == "+") {
+					altRow = "background-image: -webkit-linear-gradient(top, #00360C 0%, #010133 100%)";
 					txtColor= "color:#00FA37";
 					arrow = "<img src='img/up.png' width='15px' height='15px'/>";
-        		}
-        		else {
-        			altRow = "background-image: -webkit-linear-gradient(top, #005713 0%, #02026B 100%)";
+				}
+				else {
+					altRow = "background-image: -webkit-linear-gradient(top, #005713 0%, #02026B 100%)";
 					txtColor = "color:#FF0000"
 					arrow = "<img src='img/down.png' width='15px' height='15px'/>";
-        		}
-        	              
+				}
+					  
 				styleColRG= "style='"+txtColor+";"+altRow+";padding:2px;font-weight:normal;'";
 				styleCol= "style='color:#FFFFFF;"+altRow+";padding:2px;font-weight:normal;'";
 
 				//alert(styleCol);
-			
+		
 				//Dynamically create/update market data table
- 				var exchanges = ["NSE", "BSE", "MSE"];
- 				var symbol = tr_id;
- 				var table = document.getElementById("tab_securities");
- 				// Add row for new symbol at the end of the table
- 				//alert(tr_id);
- 				 //alert(document.getElementById(tr_id));
+				var exchanges = ["NSE", "BSE", "MSE"];
+				var symbol = tr_id;
+				var table = document.getElementById("tab_securities");
+				// Add row for new symbol at the end of the table
+				//alert(tr_id);
 
- 				if(document.getElementById(tr_id)==null)
- 				{
- 					var row = table.insertRow(-1);
- 					row.id = tr_id;
- 
- 					// Add Symbol Label
- 					var symbolCell = row.insertCell(0);
- 					symbolCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
- 					symbolCell.style.color = '#FFFFFF';
- 					symbolCell.innerHTML = tick.Sec;
- 					symbolCell.id = tr_id+"_SEC";
- 					symbolCell.classList.add("symbol");
-					
+				if(document.getElementById(tr_id)==null) {
+					var row = table.insertRow(-1);
+					row.id = tr_id;
+
+					// Add Symbol Label
+					var symbolCell = row.insertCell(0);
+					symbolCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+					symbolCell.style.color = '#FFFFFF';
+					symbolCell.innerHTML = tick.Sec;
+					symbolCell.id = tr_id+"_SEC";
+					symbolCell.classList.add("symbol");
+				
 					// Loop for creating empty Table Cells for each one of the available exchanges
 
 					for (i = 0; i < exchanges.length; i++) {
-	
-					//Price
-					  var priceCell = row.insertCell(-1);
- 					priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
- 					priceCell.style.color = '#FFFFFF';
-					  priceCell.innerHTML = tick.Price;
-					  priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
-					  priceCell.classList.add("price");
-					//Change
-					  var chgCell = row.insertCell(-1);
-					chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-					chgCell.style.color = '#FFFFFF';
-					  chgCell.innerHTML = arrow;
-					  chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
-					  chgCell.classList.add("arrow");
- 					//Volume
-					  var volumeCell = row.insertCell(-1);
-					volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-					volumeCell.style.color = '#FFFFFF';
-					  volumeCell.innerHTML = tick.Qty;
-					  volumeCell.id = tr_id+"_"+exchanges[i]+"_QTY";
-					  volumeCell.classList.add("volume");
-					  
-	 				}
- 				} else {
- 					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = tick.Price;
- 					document.getElementById(tr_id+"_"+strEx+"_ARR").innerHTML = arrow;
-  					document.getElementById(tr_id+"_"+strEx+"_QTY").innerHTML = tick.Qty;
+
+						//Price
+						var priceCell = row.insertCell(-1);
+						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+						priceCell.style.color = '#FFFFFF';
+						priceCell.innerHTML = tick.Price;
+						priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
+						priceCell.classList.add("price");
+						//Change
+						var chgCell = row.insertCell(-1);
+						chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+						chgCell.style.color = '#FFFFFF';
+						chgCell.innerHTML = arrow;
+						chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
+						chgCell.classList.add("arrow");
+						//Volume
+						var volumeCell = row.insertCell(-1);
+						volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+						volumeCell.style.color = '#FFFFFF';
+						volumeCell.innerHTML = tick.Qty;
+						volumeCell.id = tr_id+"_"+exchanges[i]+"_QTY";
+						volumeCell.classList.add("volume");
+					}
+				} else {
+					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = tick.Price;
+					document.getElementById(tr_id+"_"+strEx+"_ARR").innerHTML = arrow;
+					document.getElementById(tr_id+"_"+strEx+"_QTY").innerHTML = tick.Qty;
 				}
 
-
-
-               });
+			});
        		
        		this.paintGraph (symbols);
 		} catch (error) {

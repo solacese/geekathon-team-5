@@ -157,9 +157,18 @@ function sendLoginRq() {
 	//alert("sendLoginRq()");
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
-	if(username == "001" || username == "002" || username == "003"){
+	if(username == "001"){
 		setLoggedInUser(username);
 		window.location.hash = 'sec_top20_vol';
+		document.getElementById("exchange-banner").src="cssm/images/newsolace_nse.png"; 
+	} else if(username == "002"){
+		setLoggedInUser(username);
+		window.location.hash = 'sec_top20_vol';
+		document.getElementById("exchange-banner").src="cssm/images/newsolace_bse.png";
+	} else if(username == "003"){
+		setLoggedInUser(username);
+		window.location.hash = 'sec_top20_vol';
+		document.getElementById("exchange-banner").src="cssm/images/newsolace_mse.png";
 	} else {
 		alert("Invalid User. Please try again.")
 	}
@@ -235,12 +244,12 @@ function sendPortfolioRq() {
 		// Set the topic to requestTopic
 
 		msg.setDestination(solace.SolclientFactory.createTopic("PORTFOLIO/NSE/FETCH"));
-
+		msg.setSdtContainer(solace.SDTField.create(solace.SDTFieldType.STRING, requestText));
 		// Set delivery mode
 		msg.setDeliveryMode(solace.MessageDeliveryModeType.DIRECT);
 		// Set binary attachment
 		msg.setBinaryAttachment(requestText);
-		alert("calling reply msg : "+requestText);
+		//alert("calling reply msg : "+requestText);
 		//send the request message and wait for reply
 		mySession.sendRequest(msg, REQUEST_TIMEOUT, function(session, message) {
 			replyReceivedPortfolio(session, message);
@@ -302,28 +311,86 @@ function replyReceivedNewApp(session, message) {
 }
 
 function replyReceivedPortfolio(session, message) {
+	var trp_id;
+	console.log("replyReceivedPortfolio : "+message);
 	
-	alert("replyReceivedPortfolio 111111 : "+message);
-	//logUtil("reply received");
 	
+	var msgObj = message.getBinaryAttachment();
+	console.log("msgObj : "+msgObj);
+	var json = msgObj.slice(msgObj.indexOf("{"),msgObj.lastIndexOf("}")+1)
 	
-	var text = message.getBinaryAttachment();
-	alert("replyReceivedPortfolio 22222 : "+text);
+	var jsonObj = JSON.parse(json);
 	
-	// {"file":"A1234","status":"APPROVED", "dob":"10-04-1975", "fname":"Sumeet", "lname":"Puri", "apptype":"Normal", "recvdate":"12-01-2014"}
-/*
+	console.log("Exchange : "+jsonObj.exchange);
+	console.log("Type : "+jsonObj.type);
+	console.log("Account : "+jsonObj.account);	
+	console.log("Instruments : "+jsonObj.instruments[0].instrument);
+	console.log("Instruments : "+jsonObj.instruments.length);
+	//var sym = JSON.parse(jsonObj.instruments[0]);
+	//console.log("sym : "+sym);
+
 	try{
-		obj = JSON.parse(text);
+
+		for (i = 0; i < jsonObj.instruments.length; i++) {
+			var tick = jsonObj.instruments[i];
+			var trp_id = tick.instrument;
+			
+			console.log("tick.instrument : "+trp_id);
+		
+			var table = document.getElementById("tab_portfolio");
+			var row = table.insertRow(-1);
+			row.id = trp_id;
+			console.log("tick.instrument : "+tick.instrument);
+			
+			// Add Symbol Label
+			var symbolCell = row.insertCell(0);
+			symbolCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			symbolCell.style.color = '#FFFFFF';
+			symbolCell.innerHTML = tick.instrument;
+			symbolCell.id = trp_id+"_SYM";
+			symbolCell.classList.add("symbol");
+			
+			console.log("tick.inv_price : "+tick.inv_price);
+			//Price
+			var priceCell = row.insertCell(-1);
+			priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			priceCell.style.color = '#FFFFFF';
+			priceCell.style.textAlign = 'center';
+			priceCell.innerHTML = tick.inv_price;
+			priceCell.id = trp_id+"_INV";
+			priceCell.classList.add("price");
+			
+			console.log("tick.qty : "+tick.qty);
+			//Volume
+			var volumeCell = row.insertCell(-1);
+			volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			volumeCell.style.color = '#FFFFFF';
+			volumeCell.style.textAlign = 'center';
+			volumeCell.innerHTML = tick.qty;
+			volumeCell.id = trp_id+"_VOL";
+			volumeCell.classList.add("volume");
+			
+			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
+			//Value
+			var valueCell = row.insertCell(-1);
+			valueCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			valueCell.style.color = '#FFFFFF';
+			valueCell.style.textAlign = 'center';
+			valueCell.innerHTML = (parseInt(tick.qty)*parseFloat(tick.inv_price)).toFixed(2);
+			valueCell.id = trp_id+"_VAL";
+			valueCell.classList.add("value");
+		
+		}
 		
 		//document.getElementById("solfile").innerHTML = obj.file;
-		alert("Portfolio data.:"+obj);
+		//alert("Portfolio data.:");
 		
 	} catch (error) {
 		logUtil("Failed to send phone request");
 		logUtil(error.toString());
 	}	
 	logUtil(text);
-	*/
+	
 	
 }
 
