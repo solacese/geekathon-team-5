@@ -12,7 +12,7 @@
 
 var OPERATION_TIMEOUT = 30000;
 var REQUEST_TIMEOUT = 5000;
-var js_username ;
+var js_username = "000" ;
 
 function download() {
 	//download source
@@ -157,23 +157,14 @@ function sendLoginRq() {
 	//alert("sendLoginRq()");
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
-	setLoggedInUser(username);
-	//alert("Checking the status of username:"+username);
+	if(username == "001" || username == "002" || username == "003"){
+		setLoggedInUser(username);
+		window.location.hash = 'sec_top20_vol';
+	} else {
+		alert("Invalid User. Please try again.")
+	}
 	try {
-		var msg = solace.SolclientFactory.createMessage();
-		// Set the topic to requestTopic
-		msg.setDestination(solace.SolclientFactory.createTopic("req/market/user/login"));
-		// Set delivery mode
-		msg.setDeliveryMode(solace.MessageDeliveryModeType.DIRECT);
-		// Set binary attachment
-		msg.setBinaryAttachment("LoginUsername~"+username);
-	//alert("Checking the status of username1111:"+username);
-		//send the request message and wait for reply
-		mySession.sendRequest(msg, REQUEST_TIMEOUT, function(session, message) {
-			replyReceivedLogin(session, message);
-		}, function(session, event) {
-			replyFailedCb(session, event);
-		}, null);
+
 	} catch (error) {
 		//logUtil("Failed to send phone request");
 		//logUtil(error.toString());
@@ -226,33 +217,33 @@ function sendBuySellStockRq(action) {
 	}
 }
 
-function sendFTRq() {
-//alert("sendBuySellStockRq()"+action);
-	var sourceAcc = document.getElementById("txtSrcAcc").value;
-	var destAcc = document.getElementById("txtDestAcc").value;
-	var amount = document.getElementById("txtAmount").value;
-	amount = amount * -1
+function sendPortfolioRq() {
+//alert("sendPortfolioRq()");
 	
-	var logmsg = "Funds Transfer~"+"~"+sourceAcc +"~"+ destAcc +"~"+ amount;
-	var appmsg = "FundTran~"+js_username+"~"+sourceAcc +"~"+ destAcc +"~"+ amount;
 	
-	alert("Processing"+":"+ logmsg);
-
+	
+	var appmsg = {};
+			appmsg.account = js_username;
+			var requestText = JSON.stringify(appmsg);
+	
+	
+	var appmsg = "username~"+js_username;
+	
 		
 	try {
 		var msg = solace.SolclientFactory.createMessage();
 		// Set the topic to requestTopic
 
-			msg.setDestination(solace.SolclientFactory.createTopic("req/mdd/stock/buy"));
+		msg.setDestination(solace.SolclientFactory.createTopic("PORTFOLIO/NSE/FETCH"));
 
 		// Set delivery mode
 		msg.setDeliveryMode(solace.MessageDeliveryModeType.DIRECT);
 		// Set binary attachment
-		msg.setBinaryAttachment(appmsg);
-		//alert("calling reply msg");
+		msg.setBinaryAttachment(requestText);
+		alert("calling reply msg : "+requestText);
 		//send the request message and wait for reply
 		mySession.sendRequest(msg, REQUEST_TIMEOUT, function(session, message) {
-			replyReceivedFT(session, message);
+			replyReceivedPortfolio(session, message);
 		}, function(session, event) {
 			replyFailedCb(session, event);
 		}, null);
@@ -310,28 +301,30 @@ function replyReceivedNewApp(session, message) {
 	logUtil(text);
 }
 
-function replyReceivedFT(session, message) {
+function replyReceivedPortfolio(session, message) {
 	
-	alert("Funds Transfer Successful");
-	logUtil("reply received");
+	alert("replyReceivedPortfolio 111111 : "+message);
+	//logUtil("reply received");
 	
-	/*
+	
 	var text = message.getBinaryAttachment();
+	alert("replyReceivedPortfolio 22222 : "+text);
+	
 	// {"file":"A1234","status":"APPROVED", "dob":"10-04-1975", "fname":"Sumeet", "lname":"Puri", "apptype":"Normal", "recvdate":"12-01-2014"}
-
+/*
 	try{
 		obj = JSON.parse(text);
 		
-		document.getElementById("solfile").innerHTML = obj.file;
-		alert("Your application is successfully submitted. For future reference use file no.:"+obj.file);
+		//document.getElementById("solfile").innerHTML = obj.file;
+		alert("Portfolio data.:"+obj);
 		
 	} catch (error) {
 		logUtil("Failed to send phone request");
 		logUtil(error.toString());
 	}	
 	logUtil(text);
-	
 	*/
+	
 }
 
 function replyReceivedLogin(session, message) {
@@ -365,7 +358,7 @@ function replyReceivedLogin(session, message) {
 
 
 function replyFailedCb(session, event) {
-alert("Funds Transfer Successful!!");
+alert("Reply Failed!!!");
 	logUtil("error callback");
 	logUtil(event.infoStr);
 	logUtil(event.toString()); 
@@ -386,7 +379,7 @@ function statusUpdate(statusText, statusColor) {
 		document.getElementById("green").src = "img/green-off.png";
 	}
 	else if (statusText == 'Connected') {
-		document.getElementById("divSvrStatus").innerHTML = "UP";
+		document.getElementById("divSvrStatus").innerHTML = "";
 		document.getElementById("red").src = "img/red-off.png";
 		document.getElementById("amber").src = "img/amber-off.png";
 		document.getElementById("green").src = "img/green-on.png";
