@@ -308,6 +308,7 @@
 			
 			
 			var tr_id = str1+str2
+        	//alert(strEx);
         	
 			$.each(objJSON, function(index, tick) {
 			
@@ -379,83 +380,63 @@
 					symbolCell.id = tr_id+"_SEC";
 					symbolCell.classList.add("symbol");
 				
-					
+					// Loop for creating empty Table Cells for each one of the available exchanges
 
 					for (i = 0; i < exchanges.length; i++) {
-						// Loop for creating empty Table Cells for each one of the available exchanges
 
-						//Change
-						var chgCell = row.insertCell(-1);
-//						chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-//						chgCell.style.color = '#FFFFFF';
-						//chgCell.innerHTML = arrow;
-						chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
-						chgCell.classList.add("tab_securities_cell","arrow");
-												
 						//Price
 						var priceCell = row.insertCell(-1);
-//						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-//						priceCell.style.color = '#FFFFFF';
-						//priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
+						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+						priceCell.style.color = '#FFFFFF';
+						priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
 						priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
-						priceCell.classList.add("tab_securities_cell","price");
-
+						priceCell.classList.add("price");
+						//Change
+						var chgCell = row.insertCell(-1);
+						chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+						chgCell.style.color = '#FFFFFF';
+						chgCell.innerHTML = arrow;
+						chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
+						chgCell.classList.add("arrow");
 						//Volume
 						var volumeCell = row.insertCell(-1);
-//						volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-//						volumeCell.style.color = '#FFFFFF';
-						//volumeCell.innerHTML = tick.Qty;
+						volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+						volumeCell.style.color = '#FFFFFF';
+						volumeCell.innerHTML = tick.Qty;
 						volumeCell.id = tr_id+"_"+exchanges[i]+"_QTY";
-						volumeCell.classList.add("tab_securities_cell","volume");
+						volumeCell.classList.add("volume");
 					}
-				} 
+				} else {
+					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = parseFloat(tick.Price).toFixed(2);
+					document.getElementById(tr_id+"_"+strEx+"_PRI").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
 
-				var chgCell = document.getElementById(tr_id+"_"+strEx+"_ARR");
-				var priceCell = document.getElementById(tr_id+"_"+strEx+"_PRI");
-				var volumeCell = document.getElementById(tr_id+"_"+strEx+"_QTY");
+					document.getElementById(tr_id+"_"+strEx+"_ARR").innerHTML = arrow;
+					document.getElementById(tr_id+"_"+strEx+"_ARR").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
 
-				//Regardless whether cells where just created or already existed, we always update their content
-				chgCell.innerHTML = arrow;
-				priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
-				volumeCell.innerHTML = tick.Qty;
-
-				//Fade out animation
-				/*
-				$(priceCell).addClass("tab_securities_cell_red");
-				$(priceCell).removeClass("tab_securities_cell");
-
-				$(priceCell).delay(2000).addClass("tab_securities_cell");
-				$(priceCell).delay(2000).removeClass("tab_securities_cell_red");
-				*/
-//				$(chgCell).effect("highlight", {color: 'red',easing:'easeInElastic'}, 500);
-//				$(priceCell).effect("highlight", {color: 'red'}, 500);
-//				$(volumeCell).effect("highlight", {color: 'red'}, 500);
-				
-
-				//set callbacks on each cell for populating the Order Request form
-				chgCell.onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
-				priceCell.onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
-				volumeCell.onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
-				
-				//update My Portfolio table
-				var totalValueObj = document.getElementById(tick.Sec+"_LVAL")
-				if(document.getElementById(tick.Sec+"_LPR")!=null){
-					//console.log(document.getElementById(tick.Sec+"_VAL").innerHTML);
-					document.getElementById(tick.Sec+"_LPR").innerHTML = parseFloat(tick.Price).toFixed(2);
-					if(totalValueObj!=null){
-						var livePrice = document.getElementById(tick.Sec+"_LPR").innerHTML;
-						var qty = document.getElementById(tick.Sec+"_VOL").innerHTML;
-						totalValueObj.innerHTML = (parseFloat(livePrice)*parseInt(qty)).toFixed(2);
+					document.getElementById(tr_id+"_"+strEx+"_QTY").innerHTML = tick.Qty;
+					document.getElementById(tr_id+"_"+strEx+"_QTY").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+					
+					//update My Portfolio table
+					var totalValueObj = document.getElementById(tick.Sec+"_LVAL")
+					if(document.getElementById(tick.Sec+"_LPR")!=null){
+						//console.log(document.getElementById(tick.Sec+"_VAL").innerHTML);
+						document.getElementById(tick.Sec+"_LPR").innerHTML = parseFloat(tick.Price).toFixed(2);
+						if(totalValueObj!=null){
+							var livePrice = document.getElementById(tick.Sec+"_LPR").innerHTML;
+							var qty = document.getElementById(tick.Sec+"_VOL").innerHTML;
+							totalValueObj.innerHTML = (parseFloat(livePrice)*parseInt(qty)).toFixed(2);
+						}
+						var change = (parseFloat(document.getElementById(tick.Sec+"_LPR").innerHTML))-(parseFloat(document.getElementById(tick.Sec+"_INV").innerHTML));
+						//console.log("Change : "+change);
+						if(change > 0){
+							document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/up.png' width='15px' height='15px'/>";
+						} else if(change < 0){
+							document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/down.png' width='15px' height='15px'/>";
+						} else {
+							document.getElementById(tick.Sec+"_CHG").innerHTML = "-";
+						}
 					}
-					var change = (parseFloat(document.getElementById(tick.Sec+"_LPR").innerHTML))-(parseFloat(document.getElementById(tick.Sec+"_INV").innerHTML));
-					//console.log("Change : "+change);
-					if(change > 0){
-						document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/up.png' width='15px' height='15px'/>";
-					} else if(change < 0){
-						document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/down.png' width='15px' height='15px'/>";
-					} else {
-						document.getElementById(tick.Sec+"_CHG").innerHTML = "-";
-					}
+					
 				}
 
 			});

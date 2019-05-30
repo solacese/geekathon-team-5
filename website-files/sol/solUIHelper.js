@@ -351,12 +351,12 @@ function replyReceivedPortfolio(session, message) {
 			var tick = jsonObj.instruments[i];
 			var trp_id = tick.instrument;
 			
-			//console.log("tick.instrument : "+trp_id);
+			console.log("tick.instrument : "+trp_id);
 		
 			var table = document.getElementById("tab_portfolio");
 			var row = table.insertRow(-1);
 			row.id = trp_id;
-			//console.log("tick.instrument : "+tick.instrument);
+			console.log("tick.instrument : "+tick.instrument);
 			
 			// Add Symbol Label
 			var symbolCell = row.insertCell(0);
@@ -366,7 +366,7 @@ function replyReceivedPortfolio(session, message) {
 			symbolCell.id = trp_id+"_SYM";
 			symbolCell.classList.add("symbol");
 			
-//			console.log("tick.qty : "+tick.qty);
+			console.log("tick.qty : "+tick.qty);
 			//Volume
 			var volumeCell = row.insertCell(-1);
 			volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
@@ -375,7 +375,7 @@ function replyReceivedPortfolio(session, message) {
 			volumeCell.id = trp_id+"_VOL";
 			volumeCell.classList.add("volume");
 
-//			console.log("tick.inv_price : "+tick.inv_price);
+			console.log("tick.inv_price : "+tick.inv_price);
 			//Price
 			var priceCell = row.insertCell(-1);
 			priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
@@ -384,7 +384,7 @@ function replyReceivedPortfolio(session, message) {
 			priceCell.id = trp_id+"_INV";
 			priceCell.classList.add("price");
 			
-//			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
+			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
 			//Value
 			var valueCell = row.insertCell(-1);
 			valueCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
@@ -393,7 +393,7 @@ function replyReceivedPortfolio(session, message) {
 			valueCell.id = trp_id+"_VAL";
 			valueCell.classList.add("value");
 
-//			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
+			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
 			//Change
 			var chgCell = row.insertCell(-1);
 			chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
