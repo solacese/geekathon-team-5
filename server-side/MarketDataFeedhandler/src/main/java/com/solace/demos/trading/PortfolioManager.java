@@ -53,6 +53,12 @@ public class PortfolioManager {
 	
 	public static Properties instrumentsList = null;
 	
+	public static String topicPortfolioFetch = "";
+	public static String topicSettlementUpdates = "";
+	
+	public static DecimalFormat df_3dec = new DecimalFormat("#.###");
+	public static DecimalFormat df_nodec = new DecimalFormat("###,###");
+	
 	public static HashMap<String, JSONObject> allKnownPortfolios = new HashMap<String, JSONObject>();
 		
 	/**
@@ -122,6 +128,10 @@ public class PortfolioManager {
 		if (SOLACE_CLIENT_USERNAME == null) return 1;
 		if (EXCHANGE == null) return 1;
 		if (INSTRUMENTS == null) return 1;
+		
+		topicPortfolioFetch = "PORTFOLIO/" + EXCHANGE + "/FETCH";
+		topicSettlementUpdates = "SETTLEMENT/" + EXCHANGE + "/>";
+
 		return 0;
 	}
 	
@@ -164,10 +174,88 @@ public class PortfolioManager {
 		}
 		
 		@SuppressWarnings("unchecked")
-		public JSONObject createPortfolioMessage (String account){
+		public void updatePortfolio (String account, String instrument, int qty, String price, String type){
 			
-			DecimalFormat df_3dec = new DecimalFormat("#.###");
-			DecimalFormat df_nodec = new DecimalFormat("###,###");
+			
+			
+			if (allKnownPortfolios.containsKey(account)) {
+				log.debug("Updating the portfolio for account '" + account +"', instrument: '" + instrument + "', quantity: " + qty + ", price: " + price +" and type: " + type);
+				
+				JSONObject jsonMessage = allKnownPortfolios.get(account);
+				JSONArray instrumentsArray = (JSONArray)jsonMessage.get("instruments");
+				
+				// Does the instrument already exist in the portfolio?
+				
+				if (instrumentsArray.indexOf(instrument) > -1) {
+					JSONObject instrumentEntry = (JSONObject)instrumentsArray.get(instrumentsArray.indexOf(instrument));
+					if (type == "sell") {
+						
+						// Need to reduce qty from current entry
+						int currentQty = (int) instrumentEntry.get("qty");
+						int newQty = currentQty - qty;
+						
+						if (newQty > 0)
+						{
+							log.debug("New Qty after subtraction will be " + newQty + ", will update portfolio.");
+
+							instrumentEntry.put("qty", newQty);
+							// Remove the current entry and then re-add new
+							instrumentsArray.remove(instrumentsArray.indexOf(instrument));
+							instrumentsArray.add(instrumentEntry);
+						}
+						else {
+							log.debug("New Qty after subtraction will be " + newQty + " so deleting instrument from portfolio.");
+							// Qty is 0, no need for that instrument entry
+							instrumentsArray.remove(instrumentsArray.indexOf(instrument));
+						}
+						
+						jsonMessage.put("instruments", instrumentsArray);
+						allKnownPortfolios.put(account, jsonMessage);
+					}
+					else {
+						// Need to add qty to current entry
+						int currentQty = (int) instrumentEntry.get("qty");
+						int newQty = currentQty + qty;
+						
+						log.debug("New Qty after addition will be " + newQty + ", will update portfolio.");
+						
+						instrumentEntry.put("qty", newQty);
+						// Remove the current entry and then re-add new
+						instrumentsArray.remove(instrumentsArray.indexOf(instrument));
+						instrumentsArray.add(instrumentEntry);
+						
+						jsonMessage.put("instruments", instrumentsArray);
+						allKnownPortfolios.put(account, jsonMessage);
+					}
+					
+				}
+				else
+				{
+					log.debug("Adding new instrument to portfolio.");
+					// Need to add it new...
+					JSONObject instrumentEntry = new JSONObject();
+					
+					instrumentEntry.put("instrument", instrument);
+					instrumentEntry.put("inv_price", price);
+					instrumentEntry.put("qty", df_nodec.format(qty));
+			    	
+					instrumentsArray.add(instrumentEntry);
+					jsonMessage.put("instruments", instrumentsArray);
+					allKnownPortfolios.put(account, jsonMessage);	
+				}				
+			}
+			else {
+				log.debug("The account '" + account +"' has no portfolio entry, will build a new one and then apply.");
+				allKnownPortfolios.put(account, createPortfolioMessage(account));
+				
+				// call self again
+				updatePortfolio(account, instrument, qty, price, type);
+				
+			}	
+		}
+		
+		@SuppressWarnings("unchecked")
+		public JSONObject createPortfolioMessage (String account){
 			
 			log.debug("====================");
 			log.debug("Building new portfolio for account '" + account +"'.");
@@ -220,7 +308,6 @@ public class PortfolioManager {
 			return jsonMessage;
 		}
 		
-
 		
 		public void publishToSolace(String topicString, String payload) {
 			
@@ -313,11 +400,13 @@ public class PortfolioManager {
 				
 				// Acquire a message consumer.
 				cons = session.getMessageConsumer(new XMLMessageListener() {
-		            public void onReceive(BytesXMLMessage request) {
+		            public void onReceive(BytesXMLMessage message) {
 
-		                if (request.getReplyTo() != null) {
+		                if (message.getReplyTo() != null) {
 		                	
-		                	String jsonRequestString = ((TextMessage) request).getText();
+		                	// Assuming this is a portfolio request message then...
+		                	
+		                	String jsonRequestString = ((TextMessage) message).getText();
 		                	JSONParser jsonParser = new JSONParser();
 		                	
 		                	JSONObject jsonRequest;
@@ -335,7 +424,7 @@ public class PortfolioManager {
 				                    reply.setText(text);
 
 				                    try {
-				                        prod.sendReply(request, reply);
+				                        prod.sendReply(message, reply);
 				                    } catch (JCSMPException e) {
 				                        log.error("Error sending reply. " + e.getMessage());
 				                    }
@@ -352,10 +441,38 @@ public class PortfolioManager {
 							}
 		                	
 		                    
-		                } else {
-		                    log.debug("Received message without reply-to field");
-		                }
+		                } 
+		                else 
+		                {
+		                	
+		                	// Assuming this is a settlement update message then...		                	
+		                	String jsonMessageString = ((TextMessage) message).getText();
+		                	JSONParser jsonParser = new JSONParser();
+		                	
+		                	JSONObject jsonMessage;
+							try {
+								jsonMessage = (JSONObject) jsonParser.parse(jsonMessageString);
+								String account = (String)jsonMessage.get("account");
+								String instrument = (String)jsonMessage.get("instrument");
+								int qty = Integer.parseInt((String)jsonMessage.get("qty"));
+								String price = (String)jsonMessage.get("price");
+								String buyOrSell = (String)jsonMessage.get("side");
+								
+								log.info("Received settlement update for account: " + account);
+			                    
+			                    if (account != null) {
+			                    	updatePortfolio(account, instrument, qty, price, buyOrSell);
+			                    }
+			                    else
+			                    {
+			                    	log.debug("No account number provided, request ignored.");
+			                    }
 
+							} catch (ParseException e1) {
+								// do nothing
+								log.debug("Failed to parse json: " + e1.getMessage());
+							}
+		                }
 		            }
 
 		            public void onException(JCSMPException e) {
@@ -365,12 +482,18 @@ public class PortfolioManager {
 				
 				log.info("Aquired message consumer:"+cons);
 				
-				Topic topic = JCSMPFactory.onlyInstance().createTopic("PORTFOLIO/" + EXCHANGE + "/FETCH");
-				session.addSubscription(topic);
+				Topic topic1 = JCSMPFactory.onlyInstance().createTopic(topicPortfolioFetch);
+				Topic topic2 = JCSMPFactory.onlyInstance().createTopic(topicSettlementUpdates);
+				
+				
+				session.addSubscription(topic1);
+				session.addSubscription(topic2);
+				
 		        cons.start();
 
 		        // Consume-only session is now hooked up and running!
-		        log.info("Listening for request messages on topic " + topic);
+		        log.info("Listening for request messages on topic " + topic1);
+		        log.info("Listening for settlement update messages on topic " + topic2);
 			
 			} catch (Exception ex) {
 				log.error("Encountered an Exception: " + ex.getMessage());
