@@ -13,7 +13,7 @@
 	var solaceVpn = "default";
 	var solaceClientUsername = "webUser";
 	var solacePassword = "solace123";     
-	
+
  	/**
  	* Global variables which control the session (tcp connection)
  	*/           
@@ -378,7 +378,7 @@
 
 			document.getElementById("stksymbol").value = symbol;
 			document.getElementById("stkprice").value = price;
-			document.getElementById("volume").value = volume;
+			//document.getElementById("volume").value = volume;
 			$('#ExchangeCombo').val(exchange);
 			$('#ExchangeCombo').selectmenu('refresh');
 
