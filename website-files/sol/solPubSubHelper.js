@@ -388,7 +388,7 @@
 						var priceCell = row.insertCell(-1);
 						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
 						priceCell.style.color = '#FFFFFF';
-						priceCell.innerHTML = tick.Price;
+						priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
 						priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
 						priceCell.classList.add("price");
 						//Change
@@ -407,7 +407,7 @@
 						volumeCell.classList.add("volume");
 					}
 				} else {
-					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = tick.Price;
+					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = parseFloat(tick.Price).toFixed(2);
 					document.getElementById(tr_id+"_"+strEx+"_PRI").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
 
 					document.getElementById(tr_id+"_"+strEx+"_ARR").innerHTML = arrow;
@@ -415,6 +415,28 @@
 
 					document.getElementById(tr_id+"_"+strEx+"_QTY").innerHTML = tick.Qty;
 					document.getElementById(tr_id+"_"+strEx+"_QTY").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+					
+					//update My Portfolio table
+					var totalValueObj = document.getElementById(tick.Sec+"_LVAL")
+					if(document.getElementById(tick.Sec+"_LPR")!=null){
+						//console.log(document.getElementById(tick.Sec+"_VAL").innerHTML);
+						document.getElementById(tick.Sec+"_LPR").innerHTML = parseFloat(tick.Price).toFixed(2);
+						if(totalValueObj!=null){
+							var livePrice = document.getElementById(tick.Sec+"_LPR").innerHTML;
+							var qty = document.getElementById(tick.Sec+"_VOL").innerHTML;
+							totalValueObj.innerHTML = (parseFloat(livePrice)*parseInt(qty)).toFixed(2);
+						}
+						var change = (parseFloat(document.getElementById(tick.Sec+"_LPR").innerHTML))-(parseFloat(document.getElementById(tick.Sec+"_INV").innerHTML));
+						//console.log("Change : "+change);
+						if(change > 0){
+							document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/up.png' width='15px' height='15px'/>";
+						} else if(change < 0){
+							document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/down.png' width='15px' height='15px'/>";
+						} else {
+							document.getElementById(tick.Sec+"_CHG").innerHTML = "-";
+						}
+					}
+					
 				}
 
 			});

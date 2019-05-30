@@ -366,35 +366,58 @@ function replyReceivedPortfolio(session, message) {
 			symbolCell.id = trp_id+"_SYM";
 			symbolCell.classList.add("symbol");
 			
-			console.log("tick.inv_price : "+tick.inv_price);
-			//Price
-			var priceCell = row.insertCell(-1);
-			priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			priceCell.style.color = '#FFFFFF';
-			priceCell.style.textAlign = 'center';
-			priceCell.innerHTML = tick.inv_price;
-			priceCell.id = trp_id+"_INV";
-			priceCell.classList.add("price");
-			
 			console.log("tick.qty : "+tick.qty);
 			//Volume
 			var volumeCell = row.insertCell(-1);
 			volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
 			volumeCell.style.color = '#FFFFFF';
-			volumeCell.style.textAlign = 'center';
 			volumeCell.innerHTML = tick.qty;
 			volumeCell.id = trp_id+"_VOL";
 			volumeCell.classList.add("volume");
+
+			console.log("tick.inv_price : "+tick.inv_price);
+			//Price
+			var priceCell = row.insertCell(-1);
+			priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			priceCell.style.color = '#FFFFFF';
+			priceCell.innerHTML = tick.inv_price;
+			priceCell.id = trp_id+"_INV";
+			priceCell.classList.add("price");
 			
 			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
 			//Value
 			var valueCell = row.insertCell(-1);
 			valueCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
 			valueCell.style.color = '#FFFFFF';
-			valueCell.style.textAlign = 'center';
 			valueCell.innerHTML = (parseInt(tick.qty)*parseFloat(tick.inv_price)).toFixed(2);
 			valueCell.id = trp_id+"_VAL";
 			valueCell.classList.add("value");
+
+			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
+			//Change
+			var chgCell = row.insertCell(-1);
+			chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			chgCell.style.color = '#FFFFFF';
+			chgCell.innerHTML = "-";
+			chgCell.id = trp_id+"_CHG";
+			chgCell.classList.add("change");
+
+			//Live Price
+			var lpriceCell = row.insertCell(-1);
+			lpriceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			lpriceCell.style.color = '#FFFFFF';
+			lpriceCell.innerHTML = "-";
+			lpriceCell.id = trp_id+"_LPR";
+			lpriceCell.classList.add("price");
+
+			
+			//Latest Value
+			var lvalueCell = row.insertCell(-1);
+			lvalueCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+			lvalueCell.style.color = '#FFFFFF';
+			lvalueCell.innerHTML = "-";
+			lvalueCell.id = trp_id+"_LVAL";
+			lvalueCell.classList.add("value");
 		
 		}
 		
