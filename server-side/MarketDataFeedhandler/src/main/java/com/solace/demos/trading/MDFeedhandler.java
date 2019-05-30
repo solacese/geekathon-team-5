@@ -34,7 +34,7 @@ public class MDFeedhandler {
 		log = Logger.getLogger(MDFeedhandler.class);
 	}
 	
-	public static double FREQUENCY_IN_SECONDS = 10;
+	public static double FREQUENCY_IN_SECONDS = 5;
 
 	public static String SOLACE_IP_PORT = null;
 	public static String SOLACE_VPN = null;	
@@ -68,7 +68,7 @@ public class MDFeedhandler {
 		str += "\t -e EXCHANGE     Name of Exchange (NSE, BSE, MSE)\n";
 		str += "\t -i INSTRUMENTS  Properties file containing instruments\n";
 		str += "\t[-p PASSWORD]    Authentication password\n";
-		str += "\t[-f FREQUENCY]   Frequency of publish in seconds (default: 10)\n";
+		str += "\t[-f FREQUENCY]   Frequency of publish in seconds (default: 5)\n";
 		return str;
 	}
 	
@@ -166,45 +166,51 @@ public class MDFeedhandler {
 				    	// (1) Iterate through the instruments list
 				    	String instrument = enumInstruments.nextElement();
 				    	
-				    	// (2) Should the price go up or down?
-					    directionString = (random.nextBoolean()) ? "+" : "-";
-					    directionInt = Integer.parseInt(directionString + "1");
-					    
-					    // (3) Work out the price change
-					    change = directionInt * random.nextDouble();
-					    
-					    // (4) Create the new price and save that for the next update to calculate new price from
-					    price = Double.parseDouble(instrumentsList.getProperty(instrument)) + change;
-					    instrumentsList.setProperty(instrument, Double.toString(price));
-					    
-					    // (4a) Every so often (20% of the time), revert back to the baseline price for a given instrument to ensure multiple exchanges are not drifting apart
-					    if (random.nextDouble() < 0.20 ){
-					    	// Apply the change to the baseline price
-					    	pricePrevious = Double.parseDouble(instrumentsListOriginal.getProperty(instrument));
-					    	priceReset = pricePrevious + change;
-					    	
-					    	
-					    	// But also work out what the new change is with this price and the last price sent
-					    	directionString = (priceReset > pricePrevious) ? "+" : "-";
-					    	
-					    	log.debug("Priced back from baseline for instrument: " + instrument + ". " + priceReset + " instead of " + price);
+				    	// (1a) Is this an instrument to get an update this time round?
+				    	if (random.nextBoolean()) {
+				    		
+				    		// (2) Should the price go up or down?
+						    directionString = (random.nextBoolean()) ? "+" : "-";
+						    directionInt = Integer.parseInt(directionString + "1");
+						    
+						    // (3) Work out the price change
+						    change = directionInt * random.nextDouble();
+						    
+						    // (4) Create the new price and save that for the next update to calculate new price from
+						    price = Double.parseDouble(instrumentsList.getProperty(instrument)) + change;
+						    instrumentsList.setProperty(instrument, Double.toString(price));
+						    
+						    // (4a) Every so often (20% of the time), revert back to the baseline price for a given instrument to ensure multiple exchanges are not drifting apart
+						    if (random.nextDouble() < 0.20 ){
+						    	// Apply the change to the baseline price
+						    	pricePrevious = Double.parseDouble(instrumentsListOriginal.getProperty(instrument));
+						    	priceReset = pricePrevious + change;
+						    	
+						    	
+						    	// But also work out what the new change is with this price and the last price sent
+						    	directionString = (priceReset > pricePrevious) ? "+" : "-";
+						    	
+						    	log.debug("Priced back from baseline for instrument: " + instrument + ". " + priceReset + " instead of " + price);
 
-					    	// Now save this price back
-					    	instrumentsList.setProperty(instrument, Double.toString(priceReset));
-					    	price = priceReset;
-					    } 
-					      				 
-					    // (5) Define the topic for this instrument's update
-					    topicString = "MD/" + MDFeedhandler.EXCHANGE + "/" + instrument + "/TRADES";
-					      
-					    // (6) Create the JSON payload from the instrument, price and the up/down direction
-					    payload = createTradeUpdateMessage(instrument, price, directionString);
-					      
-					    log.debug("topicString="+topicString+"\tmessage="+payload);
-							
-						// (7) Publish the update message
-					    publishToSolace(topicString, payload);
-				      
+						    	// Now save this price back
+						    	instrumentsList.setProperty(instrument, Double.toString(priceReset));
+						    	price = priceReset;
+						    } 
+						      				 
+						    // (5) Define the topic for this instrument's update
+						    topicString = "MD/" + MDFeedhandler.EXCHANGE + "/" + instrument + "/TRADES";
+						      
+						    // (6) Create the JSON payload from the instrument, price and the up/down direction
+						    payload = createTradeUpdateMessage(instrument, price, directionString);
+						      
+						    log.debug("topicString="+topicString+"\tmessage="+payload);
+								
+							// (7) Publish the update message
+						    publishToSolace(topicString, payload);
+
+				    	}
+				    	
+				    					      
 				    }
 					
 				    log.debug("===============");
