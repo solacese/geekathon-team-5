@@ -56,6 +56,7 @@ function utils_currentTime() {
 
 function logUtil(line) {
 	var message = utils_currentTime() + ":" + line + "\n";
+	console.log(message);
 	//alert(message);
 	//var txtarea = document.getElementById("txaConsoleLog");
 	//txtarea.value = message + txtarea.value;
@@ -75,6 +76,7 @@ function stringReplaceAll(str, find, replace) {
 function initSolace() {
 
 	connectSession();
+	initializeOrdReqSessions();
 }
 
 function sendTrackRq() {
@@ -157,16 +159,20 @@ function sendLoginRq() {
 	//alert("sendLoginRq()");
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
+
+	document.getElementById("exchange-banner").className = "exchangeHeader";
+
 	if(username == "001"){
-		setLoggedInUser(username);
+		js_username = username;
 		window.location.hash = 'sec_top20_vol';
 		document.getElementById("exchange-banner").src="cssm/images/newsolace_nse.png"; 
+		
 	} else if(username == "002"){
-		setLoggedInUser(username);
+		js_username = username;
 		window.location.hash = 'sec_top20_vol';
 		document.getElementById("exchange-banner").src="cssm/images/newsolace_bse.png";
 	} else if(username == "003"){
-		setLoggedInUser(username);
+		js_username = username;
 		window.location.hash = 'sec_top20_vol';
 		document.getElementById("exchange-banner").src="cssm/images/newsolace_mse.png";
 	} else {
@@ -183,6 +189,16 @@ function sendLoginRq() {
 		//alert("Checking the status of username22222:"+username);
 }
 
+function validateLogin() {
+
+	if(js_username == '000' || js_username== null){
+		window.location.hash = 'home';
+		return false
+	} else {
+		return true
+	}
+
+}
 
 function sendBuySellStockRq(action) {
 //alert("sendBuySellStockRq()"+action);
@@ -257,7 +273,7 @@ function sendPortfolioRq() {
 			replyFailedCb(session, event);
 		}, null);
 	} catch (error) {
-		logUtil("Failed to send request");
+		logUtil("Failed to send portfolio request");
 		logUtil(error.toString());
 	}
 }
@@ -389,8 +405,6 @@ function replyReceivedPortfolio(session, message) {
 		logUtil("Failed to send phone request");
 		logUtil(error.toString());
 	}	
-	logUtil(text);
-	
 	
 }
 
@@ -450,6 +464,10 @@ function statusUpdate(statusText, statusColor) {
 		document.getElementById("red").src = "img/red-off.png";
 		document.getElementById("amber").src = "img/amber-off.png";
 		document.getElementById("green").src = "img/green-on.png";
+
+		//send a request to the portfolio manager
+		sendPortfolioRq();
+
 	}
 			
 }

@@ -28,17 +28,18 @@
     * http://192.168.0.12:8080/smf
     */
     
-    // Un-comment for demo - Solace Cloud connection
-//     var my_web_server_url = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
-//     var my_client_username = "solace-cloud-client";
-//     var my_vpn = "msgvpn-rwtxvklq4sp";
-//     var my_password = "kasaov362vnboas6r1oi2v85q8";     
+    //Un-comment for demo - Solace Cloud connection
+    var my_web_server_url = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
+    var my_client_username = "solace-cloud-client";
+    var my_vpn = "msgvpn-rwtxvklq4sp";
+    var my_password = "kasaov362vnboas6r1oi2v85q8";     
 
-	//Comment for demo - local connection (Amit)
-    var my_web_server_url = "http://127.0.0.1/smf"; //e.g. change this to F5 ip
-    var my_client_username = "demouser";
-    var my_vpn = "DemoVPN";
-    var my_password = "demouser";     
+	
+	// //Comment for demo - local connection (Amit)
+    // var my_web_server_url = "http://127.0.0.1/smf"; //e.g. change this to F5 ip
+    // var my_client_username = "demouser";
+    // var my_vpn = "DemoVPN";
+    // var my_password = "demouser";     
 
  	/**
  	* Global variables which control the session (tcp connection)
@@ -314,6 +315,8 @@
 				var intChange = tick.Chg;
 				//alert("intChange : "+intChange);
 			
+				var symbol = tick.Sec;
+
 				symbols[tick.Sec] = tick.TotalValue;
 				var grfQty = tick.Qty
 				var grfQty = grfQty.replace(/\./g,'').replace(',','');
@@ -360,7 +363,7 @@
 		
 				//Dynamically create/update market data table
 				var exchanges = ["NSE", "BSE", "MSE"];
-				var symbol = tr_id;
+				
 				var table = document.getElementById("tab_securities");
 				// Add row for new symbol at the end of the table
 				//alert(tr_id);
@@ -405,20 +408,30 @@
 					}
 				} else {
 					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = tick.Price;
+					document.getElementById(tr_id+"_"+strEx+"_PRI").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+
 					document.getElementById(tr_id+"_"+strEx+"_ARR").innerHTML = arrow;
+					document.getElementById(tr_id+"_"+strEx+"_ARR").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+
 					document.getElementById(tr_id+"_"+strEx+"_QTY").innerHTML = tick.Qty;
+					document.getElementById(tr_id+"_"+strEx+"_QTY").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
 				}
 
 			});
-       		
-       		this.paintGraph (symbols);
+
+//			
+//Memory Leak			
+//       		this.paintGraph (symbols);
+
+
 		} catch (error) {
 			alert("JSON PARSE ERROR="+error);
 		}
 		    	//alert(stockValues);
-
     
     };
+
+	
 
     this.paintGraph = function (symbols) {
 

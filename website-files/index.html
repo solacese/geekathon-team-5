@@ -19,7 +19,8 @@
     <!-- solclientjs -->
     <script type="text/javascript" src="./sol/solclient.js"></script>
 
-    <!-- business logic -->
+		<!-- business logic -->
+		<script type="text/javascript" src="./sol/solOrderReqResHelper.js"></script>		
     <script type="text/javascript" src="./sol/solPubSubHelper.js"></script>
    <script type="text/javascript" src="./sol/solUIHelper.js"></script>
    
@@ -30,25 +31,32 @@
 		
 		
 		$('#home').live('pagebeforecreate',function(event){
-			connectSession();
+			//connectSession();
 
+			
 		 });    
 
 		$('#sec_top20_vol').live('pagebeforeshow',function(event){
-			addSubscription("MD/>");
-			var strtopic = js_username+"/mdd/sec/mysec/>"
-			//alert("Subs: "+strtopic);
-			addSubscription(strtopic);
-			//addSubscription("mdd/sec/mysec/>");
-			//addSubscription("mdd/sec/top20vol/4");
 
-		 });
+			if (validateLogin() == true) {
+
+				initSolace();
+
+				addSubscription("MD/>");
+				var strtopic = js_username+"/mdd/sec/mysec/>"
+				//alert("Subs: "+strtopic);
+				addSubscription(strtopic);
+				//addSubscription("mdd/sec/mysec/>");
+				//addSubscription("mdd/sec/top20vol/4");
+			}
+	 	});
 
 		 $('#sec_top20_vol').live('pagebeforehide',function(event){
 			removeSubscription("mdd/sec/top20vol/>");
 
 		 }); 
-		 		  
+
+/*
 		$('#sec_top20_val').live('pagebeforeshow',function(event){
 			addSubscription("mdd/sec/top20val/>");
 
@@ -61,7 +69,7 @@
 		 $('#sec_top20_val').live('pagebeforehide',function(event){
 			removeSubscription("mdd/sec/top20val/>");
 
-		 }); 
+		 }); */
 		 		 
 		$( function() {
 
@@ -98,12 +106,6 @@
 			
 		}
 		
-		function setLoggedInUser(user) {
-			js_username = user
-			//alert("username:"+js_username); 
-			sendPortfolioRq();
-		}
-
 window.onload = function () {
 	var chart = new CanvasJS.Chart("chartContainer",
 	{
@@ -167,27 +169,16 @@ window.onload = function () {
 <body >
 
 <div data-role="page" id="home" data-theme="a">
-	<div data-role="header" class="header" data-theme="a">
-		
+	<div ata-role="header" class="header" data-theme="a">
 		<div id="header_image">
 			<!-- User specific header code will come here-->
-			<img src='cssm/images/newsolace_sol.png' alt='Exchnage Logo' height='100%' width='100%'>
-
+			<img src='cssm/images/newsolace_sol.png' alt='Exchange Logo' height='100%' width='100%'>
 		</div>
 	</div>
-	
-		<div data-role="content">
-			<div class="block_right_inner">
-			<div> </div>
-			<img id="red" src="img/red-on.png" height="25" width="25">
-			<img id="amber" src="img/amber-off.png" height="25" width="25">
-			<img id="green" src="img/green-off.png" height="25" width="25">
-			<div id="divSvrStatus" style="height:0px; background:#fff; color:#000000"> </div>
-		</div>
-			
+				
 		<div data-role="main" class="ui-content">
 			<div data-role="collapsibleset" >
-			  <div data-role="collapsible" data-collapsed="false">
+			  <div data-collapsed="false">
 				<h3>User Login</h3>
 					<table cellpadding="2" cellspacing="0" width="40%" align="center">
 						<tr>
@@ -214,17 +205,13 @@ window.onload = function () {
 		  </div>
 	  </div>
 
-		<br>
-		<ul data-role="listview" data-inset="true" data-filter="true">
-			<li><a href="#sec_top20_vol">Portfolio and Account Summary</a></li>
-		</ul>
 	</div>
 	
 </div>
 
-<!--- page:sec_top20_vol -->
+<!--- page:sec_top20_vo -->
 <div data-role="page" id="sec_top20_vol" data-theme="a" >
-	<div data-role="header" class="header" data-theme="a">
+	<div data-role="header" class="exchangeHeader" data-theme="a">
 		
 		<div id="header_conten"><img src='cssm/images/newsolace_sol.png' alt='Exchnage Logo' height='100%' width='100%' id='exchange-banner'></div>
 		</div>
@@ -232,54 +219,56 @@ window.onload = function () {
 			<div data-role="collapsibleset" >
 			  <div data-role="collapsible" data-collapsed="true">
 				<h3><font colour="red">Buy/Sell Stocks</font></h3>
+
 					<table cellpadding="4" cellspacing="4" width="60%" align="center" >
 						<tr>
-						<td width="35%"><label for="stksymbol">Symbol <span class="mandatory">*</span></label></td>
-						<td width="35%">
-						<input type="text" name="stksymbol" maxlength="45" value="" id="stksymbol" class="txtbox" onblur="up(this)"/><div id="wwgrp_givenName" class="wwgrp">
-						<div id="wwctrl_symbol" class="wwctrl">
-						</div> </div>
-						</td>
+							<td width="35%"><label for="stksymbol">Symbol <span class="mandatory">*</span></label></td>
+							<td width="35%">
+								<input type="text" name="stksymbol" maxlength="45" value="" id="stksymbol" class="txtbox" onblur="up(this)"/><div id="wwgrp_givenName" class="wwgrp">
+								<div id="wwctrl_symbol" class="wwctrl">
+								</div> </div>
+							</td>
 						</tr>
 						<tr>
-						<td><label for="stkprice">Target Price <span class="mandatory">*</span></label></td>
-						<td colspan="1"><input type="text" name="stkprice" maxlength="45" value="" id="stkprice" class="txtbox" onblur="up(this)"/><div id="wwgrp_surname" class="wwgrp">
-						<div id="wwctrl_price" class="wwctrl">
-						</div> </div>
-						</td>
+							<td><label for="stkprice">Target Price <span class="mandatory">*</span></label></td>
+							<td colspan="1">
+								<input type="text" name="stkprice" maxlength="45" value="" id="stkprice" class="txtbox" onblur="up(this)"/><div id="wwgrp_surname" class="wwgrp">
+								<div id="wwctrl_price" class="wwctrl">
+								</div> </div>
+							</td>
 						</tr>
 						<tr>
-						<td><label for="volume">Volume <span class="mandatory">*</span></label></td>
-						<td colspan="1">
-						<input type="text" name="volume" maxlength="10" value="" id="volume" class="txtbox"/><div id="wwgrp_birthDate" class="wwgrp">
-						<div id="wwctrl_volume" class="wwctrl">
-						</div> </div>
-						</span>
-						</td>
+							<td><label for="volume">Volume <span class="mandatory">*</span></label></td>
+							<td colspan="1">
+								<input type="text" name="volume" maxlength="10" value="" id="volume" class="txtbox"/><div id="wwgrp_birthDate" class="wwgrp">
+								<div id="wwctrl_volume" class="wwctrl">
+								</div> </div>
+							</td>
 						</tr>
 						<tr>
-						<td><label for="volume">Exchange <span class="mandatory">*</span></label></td>
-						<td colspan="1">
-						<select>
-  							<option value="nse">NSE</option>
-							<option value="bse">BSE</option>
-							<option value="mse">MSE</option>
-						</select>
-						</td>
+							<td><label for="volume">Exchange <span class="mandatory">*</span></label></td>
+							<td colspan="1">
+								<select id="ExchangeCombo">
+									<option value="NSE">NSE</option>
+									<option value="BSE">BSE</option>
+									<option value="MSE">MSE</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
-						<td colspan="1">
-						<div class="buttons">
-						<input type="submit" id="buy" name="buy" value="Buy" class="bt" onclick='sendBuySellStockRq("BUY");'/>
-						</div>
-						</td>
-						<td colspan="1">
-						<div class="buttons">
-						<input type="submit" id="sell" name="sell" value="Sell" class="bt" onclick='sendBuySellStockRq("SELL");'/>
-						</div>
-						</td>
+							<td colspan="1">
+								<div class="buttons">
+								<input type="submit" id="buy" name="buy" value="Buy" class="bt" onclick='sendOrderReqExchange("buy");'/>
+								</div>
+							</td>
+							<td colspan="1">
+								<div class="buttons">
+								<input type="submit" id="sell" name="sell" value="Sell" class="bt" onclick='sendOrderReqExchange("sell");'/>
+								</div>
+							</td>
 						</tr>
 					</table>
+					<div id="OrderRequestStatus"></div>
 			  </div>
 		  </div>
 	  </div>
@@ -289,6 +278,15 @@ window.onload = function () {
 			  <div data-role="collapsible" data-collapsed="false">
 				<h3><font colour="red">Portfolio and Account Summary</font></h3>
 
+				<div data-role="content">
+						<div class="block_right_inner">
+						<div> </div>
+						<img id="red" src="img/red-on.png" height="25" width="25">
+						<img id="amber" src="img/amber-off.png" height="25" width="25">
+						<img id="green" src="img/green-off.png" height="25" width="25">
+						<div id="divSvrStatus" style="height:0px; background:#fff; color:#000000"> </div>
+					</div>
+			
 
 			<table id="tab_securities1" class="mddTableGrid" width="100%" cellpadding="0">
 				<tbody>
@@ -374,7 +372,7 @@ window.onload = function () {
 
 <script>
 //when this page loads, connect to Solace. 
-initSolace();
+//initSolace();
 </script>
 
 
