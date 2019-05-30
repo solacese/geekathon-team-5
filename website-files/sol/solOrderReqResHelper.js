@@ -9,11 +9,12 @@
     * the below url should be
     * http://192.168.0.12:8080/smf
     */
-	var solaceUrl = "http://solmmoreno05:8081"; //e.g. change this to F5 ip
-	var solaceVpn = "default";
-	var solaceClientUsername = "webUser";
-	var solacePassword = "solace123";     
-	
+
+   var solaceUrl = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
+   var solaceVpn = "msgvpn-rwtxvklq4sp";
+   var solaceClientUsername = "solace-cloud-client";
+   var solacePassword = "kasaov362vnboas6r1oi2v85q8";     
+
  	/**
  	* Global variables which control the session (tcp connection)
  	*/           
@@ -303,20 +304,21 @@
 
 
 		/**
-     * Direct message receive callback. Solace pushes messages to this method as and when they are published
-     * if they match the added subscriptions. This method should call handler methods to process the message data
-     * In this example, this method calls the helloWorldMessageCallback() method and passes it the topic and message payload
-     * The helloWorldMessageCallback() which is defined in the index.html file itself, and it modifies the GUI to display the text received in the messages
-     * @param session - the session on which the messages are received
-     * @param message - the actual message with payload and topic
-     */
-    ExchSolSession.messageEventCb = function (session, message, object) {
-		//alert("test");
-			//extract the payload and topic from the message
+		 * Direct message receive callback. Solace pushes messages to this method as and when they are published
+		 * if they match the added subscriptions. This method should call handler methods to process the message data
+		 * In this example, this method calls the helloWorldMessageCallback() method and passes it the topic and message payload
+		 * The helloWorldMessageCallback() which is defined in the index.html file itself, and it modifies the GUI to display the text received in the messages
+		 * @param session - the session on which the messages are received
+		 * @param message - the actual message with payload and topic
+		 */
+		ExchSolSession.messageEventCb = function (session, message, object) {
+
 			var payload = message.getBinaryAttachment();
 			var topic_string = message.getDestination().getName();
 		
-			document.getElementById("OrderRequestStatus").innerHTML = "Order was received by the Exchange: with order id: " + payload;
+			var response = JSON.parse(payload);
+
+			document.getElementById("OrderRequestStatus").innerHTML = "<span class=\"ordReqResponse_status\">"+ response.side +" </span> Order for <span class=\"ordReqResponse_status\">"+ response.instrument +"</span> was accepted by the Exchange <span class=\"ordReqResponse_status\">"+ response.settlementExch + "</span> with order id <span class=\"ordReqResponse_status\">" + response.orderId +"</span>" ;
 	
 		};
 
@@ -378,7 +380,7 @@
 
 			document.getElementById("stksymbol").value = symbol;
 			document.getElementById("stkprice").value = price;
-			document.getElementById("volume").value = volume;
+			//document.getElementById("volume").value = volume;
 			$('#ExchangeCombo').val(exchange);
 			$('#ExchangeCombo').selectmenu('refresh');
 

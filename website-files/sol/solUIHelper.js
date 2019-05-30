@@ -12,7 +12,7 @@
 
 var OPERATION_TIMEOUT = 30000;
 var REQUEST_TIMEOUT = 5000;
-var js_username = "000" ;
+var js_username = null ;
 
 function download() {
 	//download source
@@ -157,41 +157,29 @@ function sendNewAppRq() {
 
 function sendLoginRq() {
 	//alert("sendLoginRq()");
+
+	
+
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
+	var exchComboValue = document.getElementById("LoginExchangeCombo").value;
+
+	if (username == '' || password == '' ){
+		alert("Please provide login information");
+		return false;
+	}
+
 
 	document.getElementById("exchange-banner").className = "exchangeHeader";
+	document.getElementById("exchange-banner").src="cssm/images/newsolace_"+ exchComboValue +".png"; 
 
-	if(username == "001"){
-		js_username = username;
-		window.location.hash = 'sec_top20_vol';
-		document.getElementById("exchange-banner").src="cssm/images/newsolace_nse.png"; 
-		
-	} else if(username == "002"){
-		js_username = username;
-		window.location.hash = 'sec_top20_vol';
-		document.getElementById("exchange-banner").src="cssm/images/newsolace_bse.png";
-	} else if(username == "003"){
-		js_username = username;
-		window.location.hash = 'sec_top20_vol';
-		document.getElementById("exchange-banner").src="cssm/images/newsolace_mse.png";
-	} else {
-		alert("Invalid User. Please try again.")
-	}
-	try {
-
-	} catch (error) {
-		//logUtil("Failed to send phone request");
-		//logUtil(error.toString());
-		alert(error.toString());
-	}
-	
-		//alert("Checking the status of username22222:"+username);
+	js_username = username;
+	window.location.hash = 'sec_top20_vol';
 }
 
 function validateLogin() {
 
-	if(js_username == '000' || js_username== null){
+	if(js_username== null || js_username== ""){
 		window.location.hash = 'home';
 		return false
 	} else {
@@ -332,16 +320,17 @@ function replyReceivedPortfolio(session, message) {
 	
 	
 	var msgObj = message.getBinaryAttachment();
-	console.log("msgObj : "+msgObj);
+//	console.log("msgObj : "+msgObj);
 	var json = msgObj.slice(msgObj.indexOf("{"),msgObj.lastIndexOf("}")+1)
 	
 	var jsonObj = JSON.parse(json);
-	
+/*	
 	console.log("Exchange : "+jsonObj.exchange);
 	console.log("Type : "+jsonObj.type);
 	console.log("Account : "+jsonObj.account);	
 	console.log("Instruments : "+jsonObj.instruments[0].instrument);
 	console.log("Instruments : "+jsonObj.instruments.length);
+	*/
 	//var sym = JSON.parse(jsonObj.instruments[0]);
 	//console.log("sym : "+sym);
 
@@ -351,73 +340,58 @@ function replyReceivedPortfolio(session, message) {
 			var tick = jsonObj.instruments[i];
 			var trp_id = tick.instrument;
 			
-			console.log("tick.instrument : "+trp_id);
+			//console.log("tick.instrument : "+trp_id);
 		
 			var table = document.getElementById("tab_portfolio");
 			var row = table.insertRow(-1);
 			row.id = trp_id;
-			console.log("tick.instrument : "+tick.instrument);
+			//console.log("tick.instrument : "+tick.instrument);
 			
 			// Add Symbol Label
 			var symbolCell = row.insertCell(0);
-			symbolCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			symbolCell.style.color = '#FFFFFF';
 			symbolCell.innerHTML = tick.instrument;
 			symbolCell.id = trp_id+"_SYM";
-			symbolCell.classList.add("symbol");
+			symbolCell.classList.add("tab_portfolio_cell", "symbol");
 			
-			console.log("tick.qty : "+tick.qty);
+//			console.log("tick.qty : "+tick.qty);
 			//Volume
 			var volumeCell = row.insertCell(-1);
-			volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			volumeCell.style.color = '#FFFFFF';
 			volumeCell.innerHTML = tick.qty;
 			volumeCell.id = trp_id+"_VOL";
-			volumeCell.classList.add("volume");
+			volumeCell.classList.add("tab_portfolio_cell","volume");
 
-			console.log("tick.inv_price : "+tick.inv_price);
+//			console.log("tick.inv_price : "+tick.inv_price);
 			//Price
 			var priceCell = row.insertCell(-1);
-			priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			priceCell.style.color = '#FFFFFF';
 			priceCell.innerHTML = tick.inv_price;
 			priceCell.id = trp_id+"_INV";
-			priceCell.classList.add("price");
+			priceCell.classList.add("tab_portfolio_cell", "price");
 			
-			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
+//			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
 			//Value
 			var valueCell = row.insertCell(-1);
-			valueCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			valueCell.style.color = '#FFFFFF';
 			valueCell.innerHTML = (parseInt(tick.qty)*parseFloat(tick.inv_price)).toFixed(2);
 			valueCell.id = trp_id+"_VAL";
-			valueCell.classList.add("value");
+			valueCell.classList.add("tab_portfolio_cell","volume");
 
-			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
+//			console.log("tick.val : "+parseInt(tick.qty)*parseFloat(tick.inv_price))
 			//Change
 			var chgCell = row.insertCell(-1);
-			chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			chgCell.style.color = '#FFFFFF';
 			chgCell.innerHTML = "-";
 			chgCell.id = trp_id+"_CHG";
-			chgCell.classList.add("change");
+			chgCell.classList.add("tab_portfolio_cell","arrow");
 
 			//Live Price
 			var lpriceCell = row.insertCell(-1);
-			lpriceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			lpriceCell.style.color = '#FFFFFF';
 			lpriceCell.innerHTML = "-";
 			lpriceCell.id = trp_id+"_LPR";
-			lpriceCell.classList.add("price");
-
+			lpriceCell.classList.add("tab_portfolio_cell","price");
 			
 			//Latest Value
 			var lvalueCell = row.insertCell(-1);
-			lvalueCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-			lvalueCell.style.color = '#FFFFFF';
 			lvalueCell.innerHTML = "-";
 			lvalueCell.id = trp_id+"_LVAL";
-			lvalueCell.classList.add("value");
+			lvalueCell.classList.add("tab_portfolio_cell","volume");
 		
 		}
 		

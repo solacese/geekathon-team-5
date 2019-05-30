@@ -298,7 +298,7 @@
     this.paintData = function (topic_string, payload) {
 
     	try { 
-        	//alert("payload : "+payload);
+        	console.log("payload : "+payload);
         	objJSON = $.parseJSON(payload);
         	var tr_id = topic_string.replace(/\//g, '_');
         	var td_id = topic_string.replace(/\//g, '_');
@@ -308,7 +308,6 @@
 			
 			
 			var tr_id = str1+str2
-        	//alert(strEx);
         	
 			$.each(objJSON, function(index, tick) {
 			
@@ -318,7 +317,8 @@
 				var symbol = tick.Sec;
 
 				symbols[tick.Sec] = tick.TotalValue;
-				var grfQty = tick.Qty
+
+/*				var grfQty = tick.Qty
 				var grfQty = grfQty.replace(/\./g,'').replace(',','');
 				//alert(tick.Qty +" : "+ grfQty);
 				if(tick.Sec == "YESBANK"){
@@ -343,21 +343,21 @@
 					symbols.EICHER = grfQty;
 				}else if(tick.Sec == "MARUTI"){
 					symbols.MARUTI = grfQty;
-				}
+				}*/
 		
 				if(intChange == "+") {
-					altRow = "background-image: -webkit-linear-gradient(top, #00360C 0%, #010133 100%)";
-					txtColor= "color:#00FA37";
+//					altRow = "background-image: -webkit-linear-gradient(top, #00360C 0%, #010133 100%)";
+//					txtColor= "color:#00FA37";
 					arrow = "<img src='img/up.png' width='15px' height='15px'/>";
 				}
 				else {
-					altRow = "background-image: -webkit-linear-gradient(top, #005713 0%, #02026B 100%)";
-					txtColor = "color:#FF0000"
+//					altRow = "background-image: -webkit-linear-gradient(top, #005713 0%, #02026B 100%)";
+//					txtColor = "color:#FF0000"
 					arrow = "<img src='img/down.png' width='15px' height='15px'/>";
 				}
-					  
+/*					  
 				styleColRG= "style='"+txtColor+";"+altRow+";padding:2px;font-weight:normal;'";
-				styleCol= "style='color:#FFFFFF;"+altRow+";padding:2px;font-weight:normal;'";
+				styleCol= "style='color:#FFFFFF;"+altRow+";padding:2px;font-weight:normal;'";*/
 
 				//alert(styleCol);
 		
@@ -380,63 +380,96 @@
 					symbolCell.id = tr_id+"_SEC";
 					symbolCell.classList.add("symbol");
 				
-					// Loop for creating empty Table Cells for each one of the available exchanges
+					
 
 					for (i = 0; i < exchanges.length; i++) {
+						// Loop for creating empty Table Cells for each one of the available exchanges
 
-						//Price
-						var priceCell = row.insertCell(-1);
-						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-						priceCell.style.color = '#FFFFFF';
-						priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
-						priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
-						priceCell.classList.add("price");
 						//Change
 						var chgCell = row.insertCell(-1);
-						chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-						chgCell.style.color = '#FFFFFF';
-						chgCell.innerHTML = arrow;
+//						chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+//						chgCell.style.color = '#FFFFFF';
+						//chgCell.innerHTML = arrow;
 						chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
-						chgCell.classList.add("arrow");
+						chgCell.classList.add("tab_securities_cell","arrow");
+												
+						//Price
+						var priceCell = row.insertCell(-1);
+//						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+//						priceCell.style.color = '#FFFFFF';
+						//priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
+						priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
+						priceCell.classList.add("tab_securities_cell","price");
+
 						//Volume
 						var volumeCell = row.insertCell(-1);
-						volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-						volumeCell.style.color = '#FFFFFF';
-						volumeCell.innerHTML = tick.Qty;
+//						volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
+//						volumeCell.style.color = '#FFFFFF';
+						//volumeCell.innerHTML = tick.Qty;
 						volumeCell.id = tr_id+"_"+exchanges[i]+"_QTY";
-						volumeCell.classList.add("volume");
+						volumeCell.classList.add("tab_securities_cell","volume");
 					}
-				} else {
-					document.getElementById(tr_id+"_"+strEx+"_PRI").innerHTML = parseFloat(tick.Price).toFixed(2);
-					document.getElementById(tr_id+"_"+strEx+"_PRI").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+				} 
 
-					document.getElementById(tr_id+"_"+strEx+"_ARR").innerHTML = arrow;
-					document.getElementById(tr_id+"_"+strEx+"_ARR").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+				var chgCell = document.getElementById(tr_id+"_"+strEx+"_ARR");
+				var priceCell = document.getElementById(tr_id+"_"+strEx+"_PRI");
+				var volumeCell = document.getElementById(tr_id+"_"+strEx+"_QTY");
 
-					document.getElementById(tr_id+"_"+strEx+"_QTY").innerHTML = tick.Qty;
-					document.getElementById(tr_id+"_"+strEx+"_QTY").onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
-					
-					//update My Portfolio table
-					var totalValueObj = document.getElementById(tick.Sec+"_LVAL")
-					if(document.getElementById(tick.Sec+"_LPR")!=null){
-						//console.log(document.getElementById(tick.Sec+"_VAL").innerHTML);
-						document.getElementById(tick.Sec+"_LPR").innerHTML = parseFloat(tick.Price).toFixed(2);
-						if(totalValueObj!=null){
-							var livePrice = document.getElementById(tick.Sec+"_LPR").innerHTML;
-							var qty = document.getElementById(tick.Sec+"_VOL").innerHTML;
-							totalValueObj.innerHTML = (parseFloat(livePrice)*parseInt(qty)).toFixed(2);
-						}
-						var change = (parseFloat(document.getElementById(tick.Sec+"_LPR").innerHTML))-(parseFloat(document.getElementById(tick.Sec+"_INV").innerHTML));
-						//console.log("Change : "+change);
-						if(change > 0){
-							document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/up.png' width='15px' height='15px'/>";
-						} else if(change < 0){
-							document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/down.png' width='15px' height='15px'/>";
-						} else {
-							document.getElementById(tick.Sec+"_CHG").innerHTML = "-";
-						}
+				//Regardless whether cells where just created or already existed, we always update their content
+				chgCell.innerHTML = arrow;
+				priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
+				volumeCell.innerHTML = tick.Qty;
+
+				//Stock Monitor Fade In/Out animation
+				if(intChange == "+") {
+					chgCell.classList.add("tab_securities_cell_green");
+					setTimeout( function(){ chgCell.classList.remove("tab_securities_cell_green") } ,  500);
+					priceCell.classList.add("tab_securities_cell_green");
+					setTimeout( function(){ priceCell.classList.remove("tab_securities_cell_green") } ,  500);
+					volumeCell.classList.add("tab_securities_cell_green");
+					setTimeout( function(){ volumeCell.classList.remove("tab_securities_cell_green") } ,  500);
+				}
+				else {
+					chgCell.classList.add("tab_securities_cell_red");
+					setTimeout( function(){ chgCell.classList.remove("tab_securities_cell_red") } ,  500);
+					priceCell.classList.add("tab_securities_cell_red");
+					setTimeout( function(){ priceCell.classList.remove("tab_securities_cell_red") } ,  500);
+					volumeCell.classList.add("tab_securities_cell_red");
+					setTimeout( function(){ volumeCell.classList.remove("tab_securities_cell_red") } ,  500);
+				}
+
+				chgCell.classList.remove("tab_securities_cell");
+				setTimeout( function(){ chgCell.classList.add("tab_securities_cell") },  500);
+				priceCell.classList.remove("tab_securities_cell");
+				setTimeout( function(){ priceCell.classList.add("tab_securities_cell") },  500);
+				volumeCell.classList.remove("tab_securities_cell");
+				setTimeout( function(){ volumeCell.classList.add("tab_securities_cell") },  500);
+
+
+				//set callbacks on each cell for populating the Order Request form
+				chgCell.onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+				priceCell.onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+				volumeCell.onclick = createClickHandler(symbol,tick.Price,tick.Qty,strEx);
+				
+				//update My Portfolio table
+				var totalValueObj = document.getElementById(tick.Sec+"_LVAL")
+				if(document.getElementById(tick.Sec+"_LPR")!=null){
+					//console.log(document.getElementById(tick.Sec+"_VAL").innerHTML);
+					document.getElementById(tick.Sec+"_LPR").innerHTML = parseFloat(tick.Price).toFixed(2);
+					if(totalValueObj!=null){
+						var livePrice = document.getElementById(tick.Sec+"_LPR").innerHTML;
+						var qty = document.getElementById(tick.Sec+"_VOL").innerHTML;
+						totalValueObj.innerHTML = (parseFloat(livePrice)*parseInt(qty)).toFixed(2);
 					}
-					
+					var change = (parseFloat(document.getElementById(tick.Sec+"_LPR").innerHTML))-(parseFloat(document.getElementById(tick.Sec+"_INV").innerHTML));
+					//console.log("Change : "+change);
+					if(change > 0){
+						document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/up.png' width='15px' height='15px'/>";
+					} else if(change < 0){
+						document.getElementById(tick.Sec+"_CHG").innerHTML = "<img src='img/down.png' width='15px' height='15px'/>";
+					} else {
+						document.getElementById(tick.Sec+"_CHG").innerHTML = "-";
+					}
 				}
 
 			});

@@ -11,9 +11,7 @@
 	<link rel="stylesheet"  href="./cssm/styles.css" />
     <!-- jquery ui -->
 
-	
-
- 	<script src="./lib/jquery.js"></script>
+	 <script src="./lib/jquery.js"></script>
 	<script src="./lib/jquery.mobile-1.1.0.js"></script>
 	
     <!-- solclientjs -->
@@ -182,16 +180,26 @@ window.onload = function () {
 				<h3>User Login</h3>
 					<table cellpadding="2" cellspacing="0" width="40%" align="center">
 						<tr>
-						<td width="10%"><label for="userName">Username</label></td>
-						<td width="10%">
-						<input type="text" name="username" maxlength="45" value="" id="username" class="txtbox" />
-						<span class="errorMessage"></span>
+							<td width="10%"><label for="userName">Username</label></td>
+							<td width="10%">
+								<input type="text" name="username" maxlength="45" value="" id="username" class="txtbox" />
+								<span class="errorMessage"></span>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="password">Password</label></td>
+							<td colspan="1"><input type="password" name="password" maxlength="45" value="" id="password" class="txtbox" />
 						</td>
 						</tr>
 						<tr>
-						<td><label for="password">Password</label></td>
-						<td colspan="1"><input type="password" name="password" maxlength="45" value="" id="password" class="txtbox" />
-						</td>
+							<td><label for="volume">Exchange </label></td>
+							<td colspan="1">
+								<select id="LoginExchangeCombo">
+									<option value="NSE">NSE</option>
+									<option value="BSE">BSE</option>
+									<option value="MSE">MSE</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 						<td colspan="2">
@@ -306,14 +314,14 @@ window.onload = function () {
 
 						</tr>
 						<tr>
-							<th>Last Trade</th>
 							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>
+							<th>Last Trade</th>
 							<th>Volume</th>
-							<th>Last Trade</th>
 							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>
+							<th>Last Trade</th>
 							<th>Volume</th>
+							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>							
 							<th>Last Trade</th>
-							<th style="min-width:15px"><img width="15px" src='img/up.png'/><img width="15px" src='img/down.png'/></th>
 							<th>Volume</th>
 						</tr>
 							
