@@ -307,14 +307,14 @@ public class PortfolioManager {
 			    	
 			    	// Yes let's add this instrument...
 			    	double price = Double.parseDouble(instrumentsList.getProperty(instrument));
-			    	double qty = Math.random() * 100;
+			    	int qty = (int) (Math.random() * 100);
 			    	
 			    	log.debug("Adding instrument " + instrument + " at price: " + df_3dec.format(price) + " and qty: " + df_nodec.format(qty));
 			    	
 			    	instrumentEntry = new JSONObject();
 					instrumentEntry.put("instrument", instrument);
 					instrumentEntry.put("inv_price", df_3dec.format(price));
-					instrumentEntry.put("qty", Double.toString(qty));
+					instrumentEntry.put("qty", Integer.toString(qty));
 			    	
 					instrumentsArray.add(instrumentEntry);
 			    	count++;
