@@ -179,7 +179,7 @@ public class PortfolioManager {
 			
 			
 			if (allKnownPortfolios.containsKey(account)) {
-				log.debug("Updating the portfolio for account '" + account +"', instrument: '" + instrument + "', quantity: " + qty + ", price: " + price +" and type: " + type);
+				log.info("Updating the portfolio for account '" + account +"', instrument: '" + instrument + "', quantity: " + qty + ", price: " + price +" and type: " + type);
 				
 				JSONObject jsonMessage = allKnownPortfolios.get(account);
 				JSONArray instrumentsArray = (JSONArray)jsonMessage.get("instruments");
@@ -245,7 +245,7 @@ public class PortfolioManager {
 				}
 				else
 				{
-					log.debug("Adding new instrument to portfolio.");
+					log.info("Adding new instrument to portfolio.");
 					log.debug("Current instruments count in portfolio: " + allKnownPortfolios.get(account).get("instruments").toString());
 					// Need to add it new...
 					JSONObject instrumentEntry = new JSONObject();
