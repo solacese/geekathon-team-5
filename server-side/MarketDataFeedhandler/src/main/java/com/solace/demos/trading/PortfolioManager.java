@@ -212,7 +212,7 @@ public class PortfolioManager {
 							log.debug("New Qty after subtraction will be " + newQty + ", will update portfolio.");
 
 							// Storage is as formatted string
-							instrumentEntry.put("qty", (df_nodec.format(newQty)).toString());
+							instrumentEntry.put("qty", Integer.toString(newQty));
 							// Remove the current entry and then re-add new
 							instrumentsArray.remove(existingIndex);
 							instrumentsArray.add(instrumentEntry);
@@ -233,7 +233,7 @@ public class PortfolioManager {
 						
 						log.debug("New Qty after addition will be " + newQty + ", will update portfolio.");
 						
-						instrumentEntry.put("qty", (df_nodec.format(newQty)).toString());
+						instrumentEntry.put("qty", Integer.toString(newQty));
 						// Remove the current entry and then re-add new
 						instrumentsArray.remove(existingIndex);
 						instrumentsArray.add(instrumentEntry);
@@ -252,7 +252,7 @@ public class PortfolioManager {
 					
 					instrumentEntry.put("instrument", instrument);
 					instrumentEntry.put("inv_price", price);
-					instrumentEntry.put("qty", (df_nodec.format(qty)).toString());
+					instrumentEntry.put("qty", Integer.toString(qty));
 			    	
 					instrumentsArray.add(instrumentEntry);
 					jsonMessage.put("instruments", instrumentsArray);
@@ -314,7 +314,7 @@ public class PortfolioManager {
 			    	instrumentEntry = new JSONObject();
 					instrumentEntry.put("instrument", instrument);
 					instrumentEntry.put("inv_price", df_3dec.format(price));
-					instrumentEntry.put("qty", (df_nodec.format(qty)).toString());
+					instrumentEntry.put("qty", Double.toString(qty));
 			    	
 					instrumentsArray.add(instrumentEntry);
 			    	count++;
