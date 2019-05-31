@@ -36,6 +36,17 @@ To run the demo open the below html file in your default browser:
 start ./website-files/index.html
 ```
 
+## Event Mesh
+
+To run the demo in an Event Mesh a user account to Solace Cloud can be used. It can be obtained from the follwing link:
+
+http://cloud.solace.com
+
+Information on how to configure the Event Mesh can be found through the following link:
+
+https://solace.com/cloud-learning/group_howto/ght_event_mesh.html
+
+
 ## Monitoring
 
 The current solution is using RTView Solace Monitor Server. It can be downloaded with a detailed configuration guide from the following SL company link:
