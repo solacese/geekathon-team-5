@@ -369,6 +369,7 @@
 
 				if(document.getElementById(tr_id)==null) {
 					var row = table.insertRow(-1);
+					row.classList.add("tr_data");
 					row.id = tr_id;
 
 					// Add Symbol Label
@@ -713,8 +714,4 @@
             ns.logUtil("Error!");
         }
     };
-
-
-
-
 

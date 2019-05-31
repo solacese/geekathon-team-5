@@ -79,6 +79,12 @@ function initSolace() {
 	initializeOrdReqSessions();
 }
 
+function cleanupTables() {
+	$("#tab_securities1 .tr_data").remove(); 
+	$("#tab_portfolio .tr_data").remove(); 
+}
+
+
 function sendTrackRq() {
 	//alert("sendTrackRq()");
 	var fileNo = document.getElementById("fileNo").value;
@@ -320,9 +326,7 @@ function replyReceivedPortfolio(session, message) {
 	
 	
 	var msgObj = message.getBinaryAttachment();
-//	console.log("msgObj : "+msgObj);
 	var json = msgObj.slice(msgObj.indexOf("{"),msgObj.lastIndexOf("}")+1)
-	
 	var jsonObj = JSON.parse(json);
 /*	
 	console.log("Exchange : "+jsonObj.exchange);
@@ -334,7 +338,11 @@ function replyReceivedPortfolio(session, message) {
 	//var sym = JSON.parse(jsonObj.instruments[0]);
 	//console.log("sym : "+sym);
 
+	
 	try{
+
+		//make sure portfolio is cleaned up
+		$("#tab_portfolio .tr_data").remove(); 
 
 		for (i = 0; i < jsonObj.instruments.length; i++) {
 			var tick = jsonObj.instruments[i];
@@ -344,6 +352,7 @@ function replyReceivedPortfolio(session, message) {
 		
 			var table = document.getElementById("tab_portfolio");
 			var row = table.insertRow(-1);
+			row.classList.add("tr_data");
 			row.id = trp_id;
 			//console.log("tick.instrument : "+tick.instrument);
 			
