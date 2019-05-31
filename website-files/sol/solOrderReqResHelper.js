@@ -58,7 +58,7 @@
 		var exchangeName = exchCombo.options[exchCombo.selectedIndex].text;
 		var session = exchangeSolaceSessions[exchCombo.selectedIndex];
 
-		var request = { account:account , instrument:instrument, price:price, qty:qty, settlementExch:exchangeName, side:action };
+		var request = { account:account , instrument:instrument, price:price, qty:qty, settlementExch:memberExchange, side:action };
 		var myJSON = JSON.stringify(request);
 		session.sendOrdReqData("ORDER/"+exchangeName+"/REQUEST/"+ account+"/"+instrument ,myJSON);
 		document.getElementById("OrderRequestStatus").innerHTML = "Order sent to the exchange " + exchangeName;

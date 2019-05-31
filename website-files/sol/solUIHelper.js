@@ -13,6 +13,7 @@
 var OPERATION_TIMEOUT = 30000;
 var REQUEST_TIMEOUT = 5000;
 var js_username = null ;
+var memberExchange = null;
 
 function download() {
 	//download source
@@ -164,8 +165,6 @@ function sendNewAppRq() {
 function sendLoginRq() {
 	//alert("sendLoginRq()");
 
-	
-
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
 	var exchComboValue = document.getElementById("LoginExchangeCombo").value;
@@ -180,6 +179,7 @@ function sendLoginRq() {
 	document.getElementById("exchange-banner").src="cssm/images/newsolace_"+ exchComboValue +".png"; 
 
 	js_username = username;
+	memberExchange = exchComboValue;
 	window.location.hash = 'sec_top20_vol';
 }
 
