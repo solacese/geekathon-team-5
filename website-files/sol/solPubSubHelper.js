@@ -267,7 +267,7 @@
     //alert("test");
     	//extract the payload and topic from the message
     	var payload = message.getBinaryAttachment();
-    	var payloadTxt = message.getXmlContent();
+		var payloadTxt = message.getXmlContent();
     	var topic_string = message.getDestination().getName();
     
     	if (payload == null) payload = payloadTxt;
@@ -298,7 +298,6 @@
     this.paintData = function (topic_string, payload) {
 
     	try { 
-        	console.log("payload : "+payload);
         	objJSON = $.parseJSON(payload);
         	var tr_id = topic_string.replace(/\//g, '_');
         	var td_id = topic_string.replace(/\//g, '_');
@@ -318,7 +317,7 @@
 
 				symbols[tick.Sec] = tick.TotalValue;
 
-/*				var grfQty = tick.Qty
+				var grfQty = tick.Qty
 				var grfQty = grfQty.replace(/\./g,'').replace(',','');
 				//alert(tick.Qty +" : "+ grfQty);
 				if(tick.Sec == "YESBANK"){
@@ -343,7 +342,7 @@
 					symbols.EICHER = grfQty;
 				}else if(tick.Sec == "MARUTI"){
 					symbols.MARUTI = grfQty;
-				}*/
+				}
 		
 				if(intChange == "+") {
 //					altRow = "background-image: -webkit-linear-gradient(top, #00360C 0%, #010133 100%)";
@@ -387,25 +386,16 @@
 
 						//Change
 						var chgCell = row.insertCell(-1);
-//						chgCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-//						chgCell.style.color = '#FFFFFF';
-						//chgCell.innerHTML = arrow;
 						chgCell.id = tr_id+"_"+exchanges[i]+"_ARR";
 						chgCell.classList.add("tab_securities_cell","arrow");
 												
 						//Price
 						var priceCell = row.insertCell(-1);
-//						priceCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-//						priceCell.style.color = '#FFFFFF';
-						//priceCell.innerHTML = parseFloat(tick.Price).toFixed(2);
 						priceCell.id = tr_id+"_"+exchanges[i]+"_PRI";
 						priceCell.classList.add("tab_securities_cell","price");
 
 						//Volume
 						var volumeCell = row.insertCell(-1);
-//						volumeCell.style.background = '-webkit-linear-gradient(top, #005713 0%, #02026B 100%)';
-//						volumeCell.style.color = '#FFFFFF';
-						//volumeCell.innerHTML = tick.Qty;
 						volumeCell.id = tr_id+"_"+exchanges[i]+"_QTY";
 						volumeCell.classList.add("tab_securities_cell","volume");
 					}
