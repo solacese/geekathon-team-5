@@ -161,6 +161,7 @@ public class PortfolioManager {
 		
 		public String getPortfolioMessage (String account){
 			
+			log.info("Fetching portfolio message for account: " + account);
 			if (allKnownPortfolios.containsKey(account)) {
 				log.debug("The account '" + account +"' already existed in the portfolios list, will fetch and return.");
 				return allKnownPortfolios.get(account).toJSONString();
