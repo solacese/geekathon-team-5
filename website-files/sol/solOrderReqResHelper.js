@@ -60,9 +60,6 @@
 
 		var request = { account:account , instrument:instrument, price:price, qty:qty, settlementExch:exchangeName, side:action };
 		var myJSON = JSON.stringify(request);
-
-		console.log("myJSON = "+session.clientName);
-
 		session.sendOrdReqData("ORDER/"+exchangeName+"/REQUEST/"+ account+"/"+instrument ,myJSON);
 		document.getElementById("OrderRequestStatus").innerHTML = "Order sent to the exchange " + exchangeName;
 		
@@ -92,12 +89,12 @@
 	var ExchSolSession = (function () {
 	
 		//constructor
-		var ExchSolSession = function (url,vpn,clientUsername,password,clientName) {
+		var ExchSolSession = function (url,vpn,clientUsername,password,clientDescription) {
 			this.url = url;
 			this.vpnName = vpn;
 			this.userName = clientUsername;
 			this.password = password;
-			this.clientName = clientName;
+			this.clientDescription = clientDescription;
 
 			this.subscriptionsInWaiting = [];
 			this.session = null;
@@ -121,8 +118,8 @@
 				sessionProperties.vpnName = this.vpnName;
 				sessionProperties.userName = this.userName;
 				sessionProperties.password = this.password;
-				if (this.clientName != null)
-					sessionProperties.clientName = this.clientName;
+				if (this.clientDescription != null)
+					sessionProperties.applicationDescription = this.clientDescription;
 			
 				sessionProperties.connectTimeoutInMsecs = OPERATION_TIMEOUT;
 				sessionProperties.readTimeoutInMsecs = OPERATION_TIMEOUT;
@@ -187,7 +184,7 @@
 			
 			try {
 				this.session.send(msg);
-				ns.logUtil("sent msg:"+payload);
+				//ns.logUtil("sent msg:"+payload);
 			} catch (error) {
 				// failed to send, therefore stop publishing and log the error thrown
 				ns.logUtil("Failed to send message '" + msg.toString() + "'");
