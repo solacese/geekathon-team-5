@@ -5,8 +5,8 @@
 A trading client connecting to a single PubSub+ Broker to represent their single membership to an exchange (i.e. NSE), yet being able to see trade messages and send orders to all three exchanges (NSE, BSE, MSE).
 
 ### Solace PubSub+ features used
-- [Publish/Subscribe Messaging](https://docs.solace.com/Messaging-Basics/Core-Concepts-Message-Models.htm#Request-)
-- [Request/Reply Messaging](https://docs.solace.com/Messaging-Basics/Core-Concepts-Message-Models.htm#Publish-)
+- [Request/Reply Messaging](https://docs.solace.com/Messaging-Basics/Core-Concepts-Message-Models.htm#Request-)
+- [Publish/Subscribe Messaging](https://docs.solace.com/Messaging-Basics/Core-Concepts-Message-Models.htm#Publish-)
 - [WebSockets Messaging](https://docs.solace.com/Solace-PubSub-Messaging-APIs/JavaScript-API/Web-Messaging-Concepts/Web-Messaging-Architectures.htm)
 
 **Try the live demo in action here:
