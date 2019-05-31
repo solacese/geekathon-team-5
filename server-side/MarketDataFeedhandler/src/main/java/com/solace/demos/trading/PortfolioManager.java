@@ -186,27 +186,41 @@ public class PortfolioManager {
 				
 				// Does the instrument already exist in the portfolio?
 				
-				if (instrumentsArray.indexOf(instrument) > -1) {
-					JSONObject instrumentEntry = (JSONObject)instrumentsArray.get(instrumentsArray.indexOf(instrument));
-					if (type == "sell") {
+				int arrLength = instrumentsArray.size();
+				int existingIndex = -1;
+				
+				for (int i = 0; i < arrLength; i++) {
+					
+					String existingInstrument = (String) ((JSONObject)instrumentsArray.get(i)).get("instrument");
+					if (existingInstrument.equalsIgnoreCase(instrument)) {
+						existingIndex = i;
+						break;
+					}
+				}
+				
+				if (existingIndex > -1) {
+					JSONObject instrumentEntry = (JSONObject)instrumentsArray.get(existingIndex);
+					
+					if (type.equalsIgnoreCase("sell")) {
 						
 						// Need to reduce qty from current entry
-						int currentQty = (int) instrumentEntry.get("qty");
+						int currentQty = Integer.parseInt((String)instrumentEntry.get("qty"));
 						int newQty = currentQty - qty;
 						
 						if (newQty > 0)
 						{
 							log.debug("New Qty after subtraction will be " + newQty + ", will update portfolio.");
 
-							instrumentEntry.put("qty", newQty);
+							// Storage is as formatted string
+							instrumentEntry.put("qty", (df_nodec.format(newQty)).toString());
 							// Remove the current entry and then re-add new
-							instrumentsArray.remove(instrumentsArray.indexOf(instrument));
+							instrumentsArray.remove(existingIndex);
 							instrumentsArray.add(instrumentEntry);
 						}
 						else {
 							log.debug("New Qty after subtraction will be " + newQty + " so deleting instrument from portfolio.");
 							// Qty is 0, no need for that instrument entry
-							instrumentsArray.remove(instrumentsArray.indexOf(instrument));
+							instrumentsArray.remove(existingIndex);
 						}
 						
 						jsonMessage.put("instruments", instrumentsArray);
@@ -214,14 +228,14 @@ public class PortfolioManager {
 					}
 					else {
 						// Need to add qty to current entry
-						int currentQty = (int) instrumentEntry.get("qty");
+						int currentQty = Integer.parseInt((String) instrumentEntry.get("qty"));
 						int newQty = currentQty + qty;
 						
 						log.debug("New Qty after addition will be " + newQty + ", will update portfolio.");
 						
-						instrumentEntry.put("qty", newQty);
+						instrumentEntry.put("qty", (df_nodec.format(newQty)).toString());
 						// Remove the current entry and then re-add new
-						instrumentsArray.remove(instrumentsArray.indexOf(instrument));
+						instrumentsArray.remove(existingIndex);
 						instrumentsArray.add(instrumentEntry);
 						
 						jsonMessage.put("instruments", instrumentsArray);
@@ -232,16 +246,20 @@ public class PortfolioManager {
 				else
 				{
 					log.debug("Adding new instrument to portfolio.");
+					log.debug("Current instruments count in portfolio: " + allKnownPortfolios.get(account).get("instruments").toString());
 					// Need to add it new...
 					JSONObject instrumentEntry = new JSONObject();
 					
 					instrumentEntry.put("instrument", instrument);
 					instrumentEntry.put("inv_price", price);
-					instrumentEntry.put("qty", df_nodec.format(qty));
+					instrumentEntry.put("qty", (df_nodec.format(qty)).toString());
 			    	
 					instrumentsArray.add(instrumentEntry);
 					jsonMessage.put("instruments", instrumentsArray);
 					allKnownPortfolios.put(account, jsonMessage);	
+					
+					log.debug("New instruments count in portfolio: " + allKnownPortfolios.get(account).get("instruments").toString());
+
 				}				
 			}
 			else {
@@ -296,7 +314,7 @@ public class PortfolioManager {
 			    	instrumentEntry = new JSONObject();
 					instrumentEntry.put("instrument", instrument);
 					instrumentEntry.put("inv_price", df_3dec.format(price));
-					instrumentEntry.put("qty", df_nodec.format(qty));
+					instrumentEntry.put("qty", (df_nodec.format(qty)).toString());
 			    	
 					instrumentsArray.add(instrumentEntry);
 			    	count++;
