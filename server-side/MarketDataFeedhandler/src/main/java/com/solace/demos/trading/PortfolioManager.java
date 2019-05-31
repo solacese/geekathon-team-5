@@ -432,7 +432,7 @@ public class PortfolioManager {
 							try {
 								jsonRequest = (JSONObject) jsonParser.parse(jsonRequestString);
 								
-								log.debug("Received request, generating response. " + jsonRequest);
+								log.info("Received request, generating response. " + jsonRequest);
 			                    
 			                    TextMessage reply = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
 			                    
