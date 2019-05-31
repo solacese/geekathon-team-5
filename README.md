@@ -38,7 +38,7 @@ start ./website-files/index.html
 
 ## Monitoring
 
-The current solution is using RTView Solace Monitor Server. It can be downloaded with a detailed configuration guide from the follwing SL company link:
+The current solution is using RTView Solace Monitor Server. It can be downloaded with a detailed configuration guide from the following SL company link:
 
 Download link: https://sl.com/free-rtviewtrial-solace-monitor/
 
