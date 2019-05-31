@@ -36,6 +36,12 @@ To run the demo open the below html file in your default browser:
 start ./website-files/index.html
 ```
 
+## Monitoring
+
+The current solution is using RTView Solace Monitor Server. It can be downloaded with a detailed configuration guide from the follwing SL company link:
+
+Download link: https://sl.com/free-rtviewtrial-solace-monitor/
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
