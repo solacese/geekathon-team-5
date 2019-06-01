@@ -7,6 +7,7 @@ namespace com.solace.demos.trading
     class Settlement
     {
         public string account;
+        public string executionExch;
         public string settlementExch;
         public string instrument;
         public string qty;

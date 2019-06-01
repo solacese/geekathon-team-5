@@ -300,7 +300,7 @@
 		
 			var response = JSON.parse(payload);
 
-			document.getElementById("OrderRequestStatus").innerHTML = "<span class=\"ordReqResponse_status\">"+ response.side +" </span> Order for <span class=\"ordReqResponse_status\">"+ response.instrument +"</span> was accepted by the Exchange <span class=\"ordReqResponse_status\">"+ response.settlementExch + "</span> with order id <span class=\"ordReqResponse_status\">" + response.orderId +"</span>" ;
+			document.getElementById("OrderRequestStatus").innerHTML = "<span class=\"ordReqResponse_status\">"+ response.side +" </span> Order for <span class=\"ordReqResponse_status\">"+ response.instrument +"</span> was accepted an will be executed by the exchange <span class=\"ordReqResponse_status\">"+ response.executionExch + "</span> with order id <span class=\"ordReqResponse_status\">" + response.orderId +"</span>.<br> Settlement (Porftolio update) will take place at the <span class=\"ordReqResponse_status\">"+ response.settlementExch + "</span> exchange" ;
 	
 		};
 

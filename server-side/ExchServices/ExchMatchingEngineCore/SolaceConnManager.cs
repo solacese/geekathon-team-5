@@ -221,6 +221,7 @@ namespace com.solace.demos.trading
                     settlementMsg.Destination = ContextFactory.Instance.CreateTopic(_config.ExchSettlementTopicPrefix + request.settlementExch + "/" + request.account + "/" + request.instrument);
 
                     Settlement settlement = new Settlement(request);
+                    settlement.executionExch = _config.ExchName;
 
                     string settlementJSON = JsonConvert.SerializeObject(settlement);
                     //settlementMsg.BinaryAttachment = Encoding.ASCII.GetBytes(settlementJSON);
@@ -246,6 +247,7 @@ namespace com.solace.demos.trading
 
                     #region create OrderRequest Response 
                     OrderResponse response = new OrderResponse(request);
+                    response.executionExch = _config.ExchName;
                     response.orderId = _config.ExchName + "_" + DateTime.Now.ToString("yyyyMMdd") + "_"+ (sequenceNumber++).ToString().PadLeft(10, '0'); 
 
                     //Prepare Response for OrderRequest message by reusing the Request message

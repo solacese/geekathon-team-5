@@ -73,7 +73,6 @@ function stringReplaceAll(str, find, replace) {
 }
 
 function initSolace() {
-
 	connectSession();
 	initializeOrdReqSessions();
 }
@@ -171,7 +170,6 @@ function sendLoginRq() {
 		alert("Please provide login information");
 		return false;
 	}
-
 
 	document.getElementById("exchange-banner").className = "exchangeHeader";
 	document.getElementById("exchange-banner").src="cssm/images/newsolace_"+ exchComboValue.toLowerCase() +".png"; 
