@@ -1,4 +1,3 @@
-    var OPERATION_TIMEOUT = 30000;
     var ns = this;
     
   
@@ -10,20 +9,6 @@
     * http://192.168.0.12:8080/smf
     */
 
-   var solaceUrl = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
-   var solaceVpn = "msgvpn-rwtxvklq4sp";
-   var solaceClientUsername = "solace-cloud-client";
-   var solacePassword = "kasaov362vnboas6r1oi2v85q8";     
-
- 	/**
- 	* Global variables which control the session (tcp connection)
- 	*/           
-
-    var publishIntervalId = null;
-    var statsIntervalId = null;
-    var elapsedTimeInSecs = 0;
-    var connectedOnce = false;
-	var previousTick = 0;
 	
     var mySession = null;
     
@@ -68,17 +53,17 @@
 	// Create one Solace Session per Exchange
 	this.initializeOrdReqSessions = function() {
 
-		var NSESession = new ExchSolSession(solaceUrl,solaceVpn,solaceClientUsername,solacePassword,"NSE_OrderRequest_GUI");
+		var NSESession = new ExchSolSession(EME_NSE_Url,EME_NSE_Vpn,EME_NSE_ClientUsername,EME_NSE_Password,"NSE_OrderRequest_GUI");
 		NSESession.connectOrdReqSession();
 		NSESession.addSubscription("ORDER/NSE/RESPONSE/"+js_username+"/>");
 		exchangeSolaceSessions.push(NSESession);
 
-		var BSESession = new ExchSolSession(solaceUrl,solaceVpn,solaceClientUsername,solacePassword,"BSE_OrderRequest_GUI");
+		var BSESession = new ExchSolSession(EME_BSE_Url,EME_BSE_Vpn,EME_BSE_ClientUsername,EME_BSE_Password,"BSE_OrderRequest_GUI");
 		BSESession.connectOrdReqSession();
 		BSESession.addSubscription("ORDER/BSE/RESPONSE/"+js_username+"/>");
 		exchangeSolaceSessions.push(BSESession);
 
-		var MSESession = new ExchSolSession(solaceUrl,solaceVpn,solaceClientUsername,solacePassword,"MSE_OrderRequest_GUI");
+		var MSESession = new ExchSolSession(EME_MSE_Url,EME_MSE_Vpn,EME_MSE_ClientUsername,EME_MSE_Password,"MSE_OrderRequest_GUI");
 		MSESession.connectOrdReqSession();
 		MSESession.addSubscription("ORDER/MSE/RESPONSE/"+js_username+"/>");
 		exchangeSolaceSessions.push(MSESession);

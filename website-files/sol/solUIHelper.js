@@ -10,8 +10,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //alert("solUIHelper");
 
-var OPERATION_TIMEOUT = 30000;
-var REQUEST_TIMEOUT = 5000;
 var js_username = null ;
 var memberExchange = null;
 
@@ -176,7 +174,7 @@ function sendLoginRq() {
 
 
 	document.getElementById("exchange-banner").className = "exchangeHeader";
-	document.getElementById("exchange-banner").src="cssm/images/newsolace_"+ exchComboValue +".png"; 
+	document.getElementById("exchange-banner").src="cssm/images/newsolace_"+ exchComboValue.toLowerCase() +".png"; 
 
 	js_username = username;
 	memberExchange = exchComboValue;
