@@ -56,15 +56,33 @@
      */
     this.connectSession = function() {
         try {
+
         	//initialize session properties
         	mySessionProperties = new solace.SessionProperties();
-        	mySessionProperties.userName = my_client_username;
-            mySessionProperties.vpnName = my_vpn;
-           
-            mySessionProperties.password = my_password;
-            mySessionProperties.url = my_web_server_url; 
-            //alert(my_web_server_url+" "+my_client_username+"@"+my_vpn);
-            ns.logUtil(my_web_server_url+" "+my_client_username+"@"+my_vpn);
+
+			if (memberExchange == "NSE"){
+
+				mySessionProperties.url = EME_NSE_Url;
+				mySessionProperties.vpnName = EME_NSE_Vpn;
+				mySessionProperties.userName = EME_NSE_ClientUsername;
+				mySessionProperties.password = EME_NSE_Password;
+
+			} else if (memberExchange == "BSE"){
+
+				mySessionProperties.url = EME_BSE_Url;
+				mySessionProperties.vpnName = EME_BSE_Vpn;
+				mySessionProperties.userName = EME_BSE_ClientUsername;
+				mySessionProperties.password = EME_BSE_Password;
+
+			} else {
+
+				mySessionProperties.url = EME_MSE_Url;
+				mySessionProperties.vpnName = EME_MSE_Vpn;
+				mySessionProperties.userName = EME_MSE_ClientUsername;
+				mySessionProperties.password = EME_MSE_Password;
+
+			}
+
             mySessionProperties.connectTimeoutInMsecs = OPERATION_TIMEOUT;
             mySessionProperties.readTimeoutInMsecs = OPERATION_TIMEOUT;
             mySessionProperties.keepAliveIntervalsLimit = 10;

@@ -23,10 +23,10 @@
 
     
     //Solace Cloud Monitor and Portfolio connection
-    var my_web_server_url = "wss://mrrwtxvklp4gn.messaging.solace.cloud/smf"; 
+/*    var my_web_server_url = "wss://mrrwtxvklp4gn.messaging.solace.cloud/smf"; 
     var my_vpn = "msgvpn-rwtxvklp4ft";
     var my_client_username = "solace-cloud-client";
-    var my_password = "Jtmn839koj5pl083d1e49akrq7";
+    var my_password = "Jtmn839koj5pl083d1e49akrq7";*/
 
  	/**
  	* Global variables which control the session (tcp connection)
