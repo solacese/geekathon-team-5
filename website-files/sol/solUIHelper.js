@@ -249,7 +249,7 @@ function sendPortfolioRq() {
 		var msg = solace.SolclientFactory.createMessage();
 		// Set the topic to requestTopic
 
-		msg.setDestination(solace.SolclientFactory.createTopic("PORTFOLIO/NSE/FETCH"));
+		msg.setDestination(solace.SolclientFactory.createTopic("PORTFOLIO/"+memberExchange +"/FETCH"));
 		msg.setSdtContainer(solace.SDTField.create(solace.SDTFieldType.STRING, requestText));
 		// Set delivery mode
 		msg.setDeliveryMode(solace.MessageDeliveryModeType.DIRECT);
