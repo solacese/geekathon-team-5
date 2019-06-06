@@ -10,7 +10,7 @@ A trading client connecting to a single PubSub+ Broker to represent their single
 - [WebSockets Messaging](https://docs.solace.com/Solace-PubSub-Messaging-APIs/JavaScript-API/Web-Messaging-Concepts/Web-Messaging-Architectures.htm)
 
 **Try the live demo in action here:
-http://solace.com**
+http://london.solace.com/trading**
 
 ## Contents
 
