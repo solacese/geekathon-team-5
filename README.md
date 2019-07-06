@@ -5,12 +5,12 @@
 A trading client connecting to a single PubSub+ Broker to represent their single membership to an exchange (i.e. NSE), yet being able to see trade messages and send orders to all three exchanges (NSE, BSE, MSE).
 
 ### Solace PubSub+ features used
-- [REST Microgateway](https://docs.solace.com/Features/Microgateway-Concepts/Microgateway-Use-Cases.htm)
 - [Request/Reply Messaging](https://docs.solace.com/Messaging-Basics/Core-Concepts-Message-Models.htm#Request-)
+- [Publish/Subscribe Messaging](https://docs.solace.com/Messaging-Basics/Core-Concepts-Message-Models.htm#Publish-)
 - [WebSockets Messaging](https://docs.solace.com/Solace-PubSub-Messaging-APIs/JavaScript-API/Web-Messaging-Concepts/Web-Messaging-Architectures.htm)
 
 **Try the live demo in action here:
-http://solace.com**
+http://london.solace.com/trading**
 
 ## Contents
 
@@ -35,6 +35,23 @@ To run the demo open the below html file in your default browser:
 ```
 start ./website-files/index.html
 ```
+
+## Event Mesh
+
+To run the demo in an Event Mesh a user account to Solace Cloud can be used. It can be obtained from the follwing link:
+
+http://cloud.solace.com
+
+Information on how to configure the Event Mesh can be found through the following link:
+
+https://solace.com/cloud-learning/group_howto/ght_event_mesh.html
+
+
+## Monitoring
+
+The current solution is using RTView Solace Monitor Server. It can be downloaded with a detailed configuration guide from the following SL company link:
+
+Download link: https://sl.com/free-rtviewtrial-solace-monitor/
 
 ## Contributing
 

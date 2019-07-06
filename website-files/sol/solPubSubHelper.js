@@ -16,41 +16,12 @@
 // from its event callbacks 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //alert("solPubSubHelper");
-    var OPERATION_TIMEOUT = 30000;
+    
     var ns = this;
     
-  
-    /**
-    * Change this variable to point it to the host:port of the solace appliance
-    * You may have to use a Web Server Reverse Proxy to deal with CORS issues for older browsers
-    * E.g. For the Reverse Proxy case, if you are serving your application on apache running on 192.168.0.12 on port 8080 
-    * the below url should be
-    * http://192.168.0.12:8080/smf
-    */
-    
-    //Un-comment for demo - Solace Cloud connection
-    var my_web_server_url = "wss://vmr-mr8v6yiwicdj.messaging.solace.cloud:20516/smf"; //e.g. change this to F5 ip
-    var my_client_username = "solace-cloud-client";
-    var my_vpn = "msgvpn-rwtxvklq4sp";
-    var my_password = "kasaov362vnboas6r1oi2v85q8";     
-
-	
-	// //Comment for demo - local connection (Amit)
-    // var my_web_server_url = "http://127.0.0.1/smf"; //e.g. change this to F5 ip
-    // var my_client_username = "demouser";
-    // var my_vpn = "DemoVPN";
-    // var my_password = "demouser";     
-
- 	/**
- 	* Global variables which control the session (tcp connection)
- 	*/           
     var mySessionProperties = null;
-    var publishIntervalId = null;
-    var statsIntervalId = null;
-    var elapsedTimeInSecs = 0;
-    var connectedOnce = false;
     var autoReconnect = true;
-    var previousTick = 0;
+	
     var mySession = null;
     var symbols = {YES:'100',HDFC:'200',ICICI:'300',AXIS:'100',KOTAK:'200',SBI:'300',TATA:'300',MARUTI:'100',MAHIN:'200',EICHER:'300',BAJAJAUTO:'100'};
 
@@ -85,15 +56,33 @@
      */
     this.connectSession = function() {
         try {
+
         	//initialize session properties
         	mySessionProperties = new solace.SessionProperties();
-        	mySessionProperties.userName = my_client_username;
-            mySessionProperties.vpnName = my_vpn;
-           
-            mySessionProperties.password = my_password;
-            mySessionProperties.url = my_web_server_url; 
-            //alert(my_web_server_url+" "+my_client_username+"@"+my_vpn);
-            ns.logUtil(my_web_server_url+" "+my_client_username+"@"+my_vpn);
+
+			if (memberExchange == "NSE"){
+
+				mySessionProperties.url = EME_NSE_Url;
+				mySessionProperties.vpnName = EME_NSE_Vpn;
+				mySessionProperties.userName = EME_NSE_ClientUsername;
+				mySessionProperties.password = EME_NSE_Password;
+
+			} else if (memberExchange == "BSE"){
+
+				mySessionProperties.url = EME_BSE_Url;
+				mySessionProperties.vpnName = EME_BSE_Vpn;
+				mySessionProperties.userName = EME_BSE_ClientUsername;
+				mySessionProperties.password = EME_BSE_Password;
+
+			} else {
+
+				mySessionProperties.url = EME_MSE_Url;
+				mySessionProperties.vpnName = EME_MSE_Vpn;
+				mySessionProperties.userName = EME_MSE_ClientUsername;
+				mySessionProperties.password = EME_MSE_Password;
+
+			}
+
             mySessionProperties.connectTimeoutInMsecs = OPERATION_TIMEOUT;
             mySessionProperties.readTimeoutInMsecs = OPERATION_TIMEOUT;
             mySessionProperties.keepAliveIntervalsLimit = 10;
