@@ -2,6 +2,7 @@ package com.solace.demos.trading;
 
 import java.text.DecimalFormat;
 import java.util.Random;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import com.solacesystems.jcsmp.XMLMessage;
 import com.solacesystems.jcsmp.XMLMessageProducer;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 public class MDFeedhandler {
 	
@@ -50,6 +52,10 @@ public class MDFeedhandler {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		// If there is not a log4j.properties in the current working directory, use the one bundled in jar.
+		checkForLog4jConfigFile();
+		
 		MDFeedhandler mdPublisher = new MDFeedhandler();
 		if(mdPublisher.parseArgs(args) ==1 || mdPublisher.validateParams() ==1) {
 			log.error(mdPublisher.getCommonUsage());
@@ -58,6 +64,21 @@ public class MDFeedhandler {
 			MDDStreamerThread hwPubThread = mdPublisher.new MDDStreamerThread();
 			hwPubThread.start();
 		}
+	}
+	
+	public static void checkForLog4jConfigFile() {
+
+		File configFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "log4j.properties");
+		if (configFile.exists()) {
+			System.out.println("Using log4j.properties file found at current working directory: " + configFile.getAbsolutePath());
+			PropertyConfigurator.configure(configFile.getAbsolutePath());
+		}
+		else
+		{
+			// The file will be bundled in the runnable jar. The resource is at the same level as this class file. 
+			PropertyConfigurator.configure(MDFeedhandler.class.getResource("log4j.properties"));	
+		}
+		
 	}
 	
 	public String getCommonUsage() {
